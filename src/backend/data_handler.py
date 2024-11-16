@@ -1,13 +1,14 @@
 import pandas as pd
 import glob
-from tabulate import tabulate
 from tqdm import tqdm
-from matplotlib import pyplot as plt
-import seaborn as sns
-
 
 class DataHandler:
-    def format_ecl(self, df_ecl):
+    # __folder_path = ""
+    # ecl = pd.DataFrame()
+    # ecf = pd.DataFrame()
+    # ecl_freq_summary = pd.DataFrame()
+
+    def __format_ecl(self, df_ecl):
         # Skip some rows that are not required
         df_ecl_fmtd = df_ecl.iloc[8:].reset_index(drop=True)
 
@@ -25,7 +26,7 @@ class DataHandler:
 
         return df_ecl_fmtd
 
-    def format_ecf(self, df_ecf):
+    def __format_ecf(self, df_ecf):
         # Skip some rows that are not required
         df_ecf_fmtd = df_ecf.iloc[1:].reset_index(drop=True)
 
@@ -53,8 +54,8 @@ class DataHandler:
         df_ecl = data.iloc[0:ecf_index, ]
         df_ecf = data.iloc[ecf_index:, ]
 
-        df_ecl = self.format_ecl(df_ecl)
-        df_ecf = self.format_ecf(df_ecf)
+        df_ecl = self.__format_ecl(df_ecl)
+        df_ecf = self.__format_ecf(df_ecf)
 
         return df_ecl, df_ecf
 
@@ -85,12 +86,15 @@ class DataHandler:
         summary = summary.drop(columns='SortKey')
         return summary
 
-    def import_folder(self, folder_path):
-        self.folder_path = folder_path
-        self.ecl = pd.Dataframe()
+    def get_folder(self):
+        return self.__folder_path
+
+    def set_folder(self, folder_path):
+        self.__folder_path = folder_path
+        self.ecl = pd.DataFrame()
         self.ecf = pd.DataFrame()
-        self.ecl, self.ecf = self.read_csv_from_folder(folder_path)
-        self.freq_summary = self.get_ecl_freq_summary(self.ecl)
+        self.ecl, self.ecf = self.read_csv_from_folder(self.__folder_path)
+        self.ecl_freq_summary = self.get_ecl_freq_summary(self.ecl)
 
     def __init__(self, folder_path):
-        self.import_folder(folder_path)
+        self.set_folder(folder_path)
