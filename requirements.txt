@@ -1,5 +1,0 @@
-# add requirements here
-pandas
-colorama
-PyQt5
-matplotlib
