@@ -1,4 +1,3 @@
-Use snake case for file naming
-Start class names with capital
-Use camel case or snakecase for function names and variable names
-Snake case for file names
+File naming = Snake case
+class naming = Pascal case
+Function names and Variable names = Snake case 
