@@ -4,7 +4,7 @@ import sys
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QPushButton, QSplitter, QScrollArea, QCheckBox, QButtonGroup,
-    QRadioButton, QGroupBox
+    QRadioButton, QGroupBox, QMainWindow, QMenuBar, QFileDialog, QMessageBox
 )
 from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -12,21 +12,57 @@ from matplotlib.figure import Figure
 
 from src.backend.data_handler import DataHandler
 
-class ErrorAnalyzerGUI(QWidget):
+class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
     def __init__(self):
         super().__init__()
-        self.data_handler = DataHandler("csv\\")  # Update with actual path
+        self.data_handler = None  # Initialize as None
         self.selected_errors = set()
-        self.current_chart_type = 'bar'  # or 'pie'
+        self.current_chart_type = 'bar'
         self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle('Error Analyzer')
         self.setGeometry(100, 100, 1200, 800)
 
-        main_layout = QHBoxLayout(self)
+        # Create menu bar
+        menubar = self.menuBar()
+        
+        # File menu
+        file_menu = menubar.addMenu('File')
+        import_action = file_menu.addAction('Import Folder')
+        import_action.triggered.connect(self.import_folder)
 
-        # Left side - Scrollable checkboxes
+        # Help menu
+        help_menu = menubar.addMenu('Help')
+        help_action = help_menu.addAction('Help')
+        help_action.triggered.connect(self.show_help)
+
+        # Credits menu
+        credits_action = menubar.addAction('Credits')
+        credits_action.triggered.connect(self.show_credits)
+
+        # Central widget to hold the main layout
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QHBoxLayout(central_widget)
+
+        # Create the main content widget
+        self.main_content_widget = QWidget()
+        self.main_content_layout = QHBoxLayout(self.main_content_widget)
+        
+        # Create placeholder widget
+        self.placeholder_widget = QWidget()
+        placeholder_layout = QVBoxLayout(self.placeholder_widget)
+        placeholder_label = QLabel("Please select a folder containing CSV files\nFile → Import Folder")
+        placeholder_label.setAlignment(Qt.AlignCenter)
+        placeholder_layout.addWidget(placeholder_label)
+        
+        # Add placeholder to main layout initially
+        main_layout.addWidget(self.placeholder_widget)
+        main_layout.addWidget(self.main_content_widget)
+        self.main_content_widget.hide()  # Hide content initially
+
+        # Setup main content
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
 
@@ -49,12 +85,6 @@ class ErrorAnalyzerGUI(QWidget):
         scroll_content = QWidget()
         self.checkbox_layout = QVBoxLayout(scroll_content)
 
-        # Modify the checkbox creation to disconnect default signal
-        for _, row in self.data_handler.ecl_freq_summary.iterrows():
-            checkbox = QCheckBox(f"{row['Description']} ({row['Frequency']})")
-            checkbox.stateChanged.connect(lambda state, cb=checkbox: self.on_checkbox_change(state, cb))
-            self.checkbox_layout.addWidget(checkbox)
-
         scroll.setWidget(scroll_content)
         left_layout.addWidget(scroll)
 
@@ -75,11 +105,72 @@ class ErrorAnalyzerGUI(QWidget):
         self.canvas = FigureCanvas(self.figure)
         right_layout.addWidget(self.canvas)
 
-        # Add widgets to main layout
-        main_layout.addWidget(left_widget, stretch=1)
-        main_layout.addWidget(right_widget, stretch=2)
+        # Add widgets to main content layout
+        self.main_content_layout.addWidget(left_widget, stretch=1)
+        self.main_content_layout.addWidget(right_widget, stretch=2)
 
         self.show()
+
+    def import_folder(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder")
+        if folder_path:
+            try:
+                self.data_handler = DataHandler(folder_path)
+                if len(self.data_handler.ecl_freq_summary) == 0:
+                    QMessageBox.warning(self, "Warning", "No CSV files found in the selected folder or files are empty!")
+                    return
+                
+                # Switch from placeholder to main content
+                self.placeholder_widget.hide()
+                self.main_content_widget.show()
+                self.refresh_ui()
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to load data: {str(e)}")
+
+    def refresh_ui(self):
+        """Refresh the UI after loading new data"""
+        # Clear existing checkboxes
+        while self.checkbox_layout.count():
+            child = self.checkbox_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        if self.data_handler and len(self.data_handler.ecl_freq_summary) > 0:
+            # Add new checkboxes
+            for _, row in self.data_handler.ecl_freq_summary.iterrows():
+                checkbox = QCheckBox(f"{row['Description']} ({row['Frequency']})")
+                checkbox.stateChanged.connect(lambda state, cb=checkbox: self.on_checkbox_change(state, cb))
+                self.checkbox_layout.addWidget(checkbox)
+
+        self.selected_errors.clear()
+        self.update_chart()
+
+    def show_help(self):
+        help_text = """
+        Error Analyzer Help:
+        
+        1. Import Data:
+           - Click File -> Import Folder
+           - Select a folder containing CSV files
+        
+        2. Analyze Errors:
+           - Use checkboxes to select errors
+           - Switch between Bar and Pie charts
+           - Use Select All/Deselect All for quick selection
+        """
+        QMessageBox.information(self, "Help", help_text)
+
+    def show_credits(self):
+        credits_text = """
+        Error Analyzer
+        Version 1.0
+        
+        Developed by:
+        Your Team Name/Members
+        
+        © 2024 Your Organization
+        """
+        QMessageBox.information(self, "Credits", credits_text)
 
     def on_checkbox_change(self, state, checkbox=None):
         """Handle individual checkbox changes"""
@@ -116,6 +207,12 @@ class ErrorAnalyzerGUI(QWidget):
     def update_chart(self):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
+
+        if not self.data_handler or len(self.selected_errors) == 0:
+            ax.text(0.5, 0.5, 'No data to display\nSelect errors to visualize', 
+                   ha='center', va='center')
+            self.canvas.draw()
+            return
 
         # Filter data based on selected errors
         filtered_data = self.data_handler.ecl_freq_summary[
