@@ -54,7 +54,7 @@ ErrorAnalyzer/
 ├── data/                 # Testing data repository
 ├── src/
 │   ├── backend/         # Core analysis logic
-���   └── frontend/        # PyQt5 GUI implementation
+│   └── frontend/        # PyQt5 GUI implementation
 ├── main.py              # Application entry point
 ├── requirements.txt     # Dependencies
 └── setup.py            # Package configuration
