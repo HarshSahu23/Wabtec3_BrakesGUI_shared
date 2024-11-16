@@ -1,7 +1,7 @@
 # Error Analyzer 📊
 
 <a href="https://www.wabteccorp.com/" target="_blank">
-  <img src="https://www.wabteccorp.com/themes/custom/wabtec/images/Wabtec-logo-White.svg" alt="Wabtec" width="200"/>
+  <img src="https://www.wabteccorp.com/themes/custom/wabtec/images/Wabtec-logo-White.svg" alt="Wabtec" width="200" height="100"/>
 </a>
 <p></p>
 
