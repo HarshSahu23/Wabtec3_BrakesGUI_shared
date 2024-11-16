@@ -69,9 +69,9 @@ class DataHandler:
         for csv_file_path in tqdm(csv_files, desc="Reading Files"):
             df_ecl, df_ecf = self.read_csv_from_file(csv_file_path)
             merged_df_ecl = pd.concat(
-                [merged_df_ecl, df_ecl])  # Deault axis = 0
+                [merged_df_ecl, df_ecl])  # Default axis = 0
             merged_df_ecf = pd.concat(
-                [merged_df_ecf, df_ecf])  # Deault axis = 0
+                [merged_df_ecf, df_ecf])  # Default axis = 0
 
         merged_df_ecf.reset_index(drop=True, inplace=True)
         merged_df_ecl.reset_index(drop=True, inplace=True)
