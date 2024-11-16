@@ -1,5 +1,10 @@
 # Error Analyzer 📊
 
+<a href="https://www.wabteccorp.com/" target="_blank">
+  <img src="https://www.wabteccorp.com/themes/custom/wabtec/images/Wabtec-logo-White.svg" alt="Wabtec" width="200"/>
+</a>
+<p></p>
+
 > A Python-based application for analyzing error codes from CSV files with interactive visualizations.
 
 ## Features ✨
@@ -49,7 +54,7 @@ ErrorAnalyzer/
 ├── data/                 # Testing data repository
 ├── src/
 │   ├── backend/         # Core analysis logic
-│   └── frontend/        # PyQt5 GUI implementation
+���   └── frontend/        # PyQt5 GUI implementation
 ├── main.py              # Application entry point
 ├── requirements.txt     # Dependencies
 └── setup.py            # Package configuration
