@@ -166,9 +166,15 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         Version 1.0
         
         Developed by:
-        Your Team Name/Members
+        Akhand Pratap Tiwari
+        Aryan Rana
+        Harsh Sahu
+        Elson Nag
         
-        © 2024 Your Organization
+        Under the guidance of:
+        Wabtec Corporation 
+
+        © 2024 Wabtec Corporation
         """
         QMessageBox.information(self, "Credits", credits_text)
 
