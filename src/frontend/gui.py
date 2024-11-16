@@ -2,159 +2,138 @@
 
 import sys
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
-    QPushButton, QSplitter, QTableWidget, QTableWidgetItem, QComboBox
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
+    QPushButton, QSplitter, QScrollArea, QCheckBox, QButtonGroup,
+    QRadioButton, QGroupBox
 )
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from src.backend.ErrorAnalyzerBackend import ErrorAnalyzerBackend
+from src.backend.data_handler import DataHandler
 
 class ErrorAnalyzerGUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.backend = ErrorAnalyzerBackend()
-        self.swap_axes = False  # For swapping axes in the plot
+        self.data_handler = DataHandler("csv\\")  # Update with actual path
+        self.selected_errors = set()
+        self.current_chart_type = 'bar'  # or 'pie'
         self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle('Error Analyzer')
         self.setGeometry(100, 100, 1200, 800)
 
-        main_layout = QVBoxLayout(self)
-        input_layout = QHBoxLayout()
+        main_layout = QHBoxLayout(self)
 
-        self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText('Enter comma-separated error descriptions')
-        input_layout.addWidget(self.input_field)
-
-        self.load_button = QPushButton('Load Errors')
-        self.load_button.clicked.connect(self.load_errors)
-        input_layout.addWidget(self.load_button)
-
-        # Swap Axes Button
-        self.swap_axes_button = QPushButton('Swap Axes')
-        self.swap_axes_button.setCheckable(True)
-        self.swap_axes_button.clicked.connect(self.toggle_axes)
-        input_layout.addWidget(self.swap_axes_button)
-
-        # Sorting ComboBox for Plot
-        self.plot_sort_combo = QComboBox()
-        self.plot_sort_combo.addItems(['Sort by Expectation', 'Sort by Frequency', 'Sort Alphabetically'])
-        self.plot_sort_combo.currentIndexChanged.connect(self.update_plot_sorting)
-        input_layout.addWidget(self.plot_sort_combo)
-
-        main_layout.addLayout(input_layout)
-
-        splitter = QSplitter(Qt.Horizontal)
-        main_layout.addWidget(splitter)
-
-        # Left - Table
+        # Left side - Scrollable checkboxes
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
 
-        self.sort_combo = QComboBox()
-        self.sort_combo.addItems(['Sort by Name', 'Sort by Expectation'])
-        self.sort_combo.currentIndexChanged.connect(self.sort_table)
-        left_layout.addWidget(self.sort_combo)
+        # Chart type selection
+        chart_group = QGroupBox("Chart Type")
+        chart_layout = QHBoxLayout()
+        self.bar_radio = QRadioButton("Bar Chart")
+        self.pie_radio = QRadioButton("Pie Chart")
+        self.bar_radio.setChecked(True)
+        self.bar_radio.toggled.connect(self.update_chart)
+        self.pie_radio.toggled.connect(self.update_chart)
+        chart_layout.addWidget(self.bar_radio)
+        chart_layout.addWidget(self.pie_radio)
+        chart_group.setLayout(chart_layout)
+        left_layout.addWidget(chart_group)
 
-        self.table = QTableWidget()
-        self.table.setColumnCount(3)
-        self.table.setHorizontalHeaderLabels(['Error Code', 'Error Description', 'Frequency'])
-        left_layout.addWidget(self.table)
+        # Scrollable area for checkboxes
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll_content = QWidget()
+        self.checkbox_layout = QVBoxLayout(scroll_content)
 
-        splitter.addWidget(left_widget)
+        # Modify the checkbox creation to disconnect default signal
+        for _, row in self.data_handler.ecl_freq_summary.iterrows():
+            checkbox = QCheckBox(f"{row['Description']} ({row['Frequency']})")
+            checkbox.stateChanged.connect(lambda state, cb=checkbox: self.on_checkbox_change(state, cb))
+            self.checkbox_layout.addWidget(checkbox)
 
-        # Right - Plot
+        scroll.setWidget(scroll_content)
+        left_layout.addWidget(scroll)
+
+        # Select/Deselect All buttons
+        btn_layout = QHBoxLayout()
+        select_all_btn = QPushButton("Select All")
+        deselect_all_btn = QPushButton("Deselect All")
+        select_all_btn.clicked.connect(self.select_all)
+        deselect_all_btn.clicked.connect(self.deselect_all)
+        btn_layout.addWidget(select_all_btn)
+        btn_layout.addWidget(deselect_all_btn)
+        left_layout.addLayout(btn_layout)
+
+        # Right side - Plot
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
-
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
         right_layout.addWidget(self.canvas)
 
-        splitter.addWidget(right_widget)
+        # Add widgets to main layout
+        main_layout.addWidget(left_widget, stretch=1)
+        main_layout.addWidget(right_widget, stretch=2)
 
         self.show()
 
-    def load_errors(self):
-        input_text = self.input_field.text()
-        expected_errors = set(e.strip().upper() for e in input_text.split(',') if e.strip())
-        self.backend.set_expected_errors(expected_errors)
-        self.backend.process_data()
-        self.update_table()
-        self.update_plot()
+    def on_checkbox_change(self, state, checkbox=None):
+        """Handle individual checkbox changes"""
+        if checkbox:  # Single checkbox change
+            error_desc = checkbox.text().split(" (")[0]
+            if state == Qt.Checked:
+                self.selected_errors.add(error_desc)
+            else:
+                self.selected_errors.discard(error_desc)
+            self.update_chart()
 
-    def sort_table(self):
-        if self.sort_combo.currentText() == 'Sort by Name':
-            self.backend.sort_by_name()
-        else:
-            self.backend.sort_by_expectation()
-        self.update_table()
+    def select_all(self):
+        self._set_all_checkboxes(True)
 
-    def update_plot_sorting(self):
-        current_sort = self.plot_sort_combo.currentText()
-        if current_sort == 'Sort by Expectation':
-            self.backend.sort_plot_data_by_expectation()
-        elif current_sort == 'Sort by Frequency':
-            self.backend.sort_plot_data_by_frequency()
-        else:
-            self.backend.sort_plot_data_alphabetically()
-        self.update_plot()
+    def deselect_all(self):
+        self._set_all_checkboxes(False)
 
-    def toggle_axes(self):
-        self.swap_axes = not self.swap_axes
-        self.update_plot()
+    def _set_all_checkboxes(self, state):
+        """Set all checkboxes without triggering individual updates"""
+        self.selected_errors.clear()
+        # Temporarily disconnect checkbox signals
+        for i in range(self.checkbox_layout.count()):
+            checkbox = self.checkbox_layout.itemAt(i).widget()
+            checkbox.blockSignals(True)
+            checkbox.setChecked(state)
+            if state:
+                error_desc = checkbox.text().split(" (")[0]
+                self.selected_errors.add(error_desc)
+            checkbox.blockSignals(False)
 
-    def update_table(self):
-        data = self.backend.get_table_data()
-        self.table.setRowCount(len(data))
-        for row, (code, desc, freq, color) in enumerate(data):
-            code_item = QTableWidgetItem(code)
-            desc_item = QTableWidgetItem(desc)
-            freq_item = QTableWidgetItem(str(freq))
+        # Update chart once after all checkboxes are set
+        self.update_chart()
 
-            # Set text color based on expectation
-            for item in [code_item, desc_item, freq_item]:
-                item.setForeground(color)
-
-            self.table.setItem(row, 0, code_item)
-            self.table.setItem(row, 1, desc_item)
-            self.table.setItem(row, 2, freq_item)
-        self.table.resizeColumnsToContents()
-
-    def update_plot(self):
+    def update_chart(self):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
 
-        # Data for plotting
-        error_descs, freqs, colors = self.backend.get_plot_data()
-        positions = range(len(error_descs))
+        # Filter data based on selected errors
+        filtered_data = self.data_handler.ecl_freq_summary[
+            self.data_handler.ecl_freq_summary['Description'].isin(self.selected_errors)
+        ]
 
-        if self.swap_axes:
-            # Swap axes: Error Descriptions on y-axis
-            ax.barh(positions, freqs, color=colors)
-            ax.set_yticks(positions)
-            ax.set_yticklabels(error_descs)
-            ax.invert_yaxis()
-            ax.set_xlabel('Frequency')
-            ax.set_title('Error Frequencies')
-        else:
-            # Default axes: Error Descriptions on x-axis
-            ax.bar(positions, freqs, color=colors)
-            ax.set_xticks(positions)
-            ax.set_xticklabels(error_descs, rotation=45, ha='right')  # Rotate labels
-
-            # Reduce font size if necessary
-            ax.tick_params(axis='x', labelsize=8)
-
-            # Adjust bottom margin to make room for x-axis labels
-            self.figure.subplots_adjust(bottom=0.3)
-
-            ax.set_ylabel('Frequency')
-            ax.set_title('Error Frequencies')
+        if not filtered_data.empty:
+            if self.bar_radio.isChecked():
+                # Bar chart
+                ax.bar(range(len(filtered_data)), filtered_data['Frequency'])
+                ax.set_xticks(range(len(filtered_data)))
+                ax.set_xticklabels(filtered_data['Description'], rotation=45, ha='right')
+                ax.set_ylabel('Frequency')
+                self.figure.subplots_adjust(bottom=0.2)
+            else:
+                # Pie chart
+                ax.pie(filtered_data['Frequency'], labels=filtered_data['Description'],
+                      autopct='%1.1f%%')
 
         self.canvas.draw()
 
