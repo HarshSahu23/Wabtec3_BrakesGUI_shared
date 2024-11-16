@@ -10,7 +10,7 @@ from PyQt5.QtGui import QColor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from ErrorAnalyzerBackend import ErrorAnalyzerBackend
+from src.backend.ErrorAnalyzerBackend import ErrorAnalyzerBackend
 
 class ErrorAnalyzerGUI(QWidget):
     def __init__(self):

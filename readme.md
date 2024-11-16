@@ -1,45 +1,123 @@
-# Wabtec Hackathon Project
+# Error Analyzer 📊
 
-## Setup
-1. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+> A Python-based application for analyzing error codes from CSV files with interactive visualizations.
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Features ✨
 
-3. Copy `.env.example` to `.env` and fill in your configuration values.
+- Interactive GUI built with PyQt5
+- Real-time error code analysis
+- Dynamic visualization using matplotlib
+- CSV file processing and management
+- Comprehensive error frequency reporting
 
-## Project Structure
-```
-main/
-├── Include/              # Package includes
-├── src/                  # Source code
-│   ├── __init__.py
-│   ├── data/            # Data processing modules
-│   ├── models/          # ML models
-│   └── utils/           # Utility functions
-├── tests/               # Test files
-├── .env                 # Environment variables (not in git)
-├── .env.example         # Example environment variables
-├── .gitignore          # Git ignore rules
-├── README.md           # Project documentation
-├── requirements.txt    # Project dependencies
-└── setup.py           # Package configuration
+## Installation 🚀
+
+### Prerequisites
+
+- Python 3.8+
+- Git
+
+### Quick Start
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/error-analyzer.git
+cd error-analyzer
 ```
 
-## Development Guidelines
-1. Always work in a virtual environment
-2. Format code using black: `black .`
-3. Sort imports using isort: `isort .`
-4. Run tests before committing: `pytest`
+2. Set up virtual environment:
+```bash
+python -m venv venv
 
-## Contributing
-1. Create a new branch for each feature
-2. Follow PEP 8 style guide
-3. Write tests for new features
-4. Update documentation as needed
+# Windows
+.\venv\Scripts\activate
+
+# Unix/MacOS
+source venv/bin/activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Project Structure 📁
+
+```
+ErrorAnalyzer/
+├── csv/                  # Error log CSV files
+├── data/                 # Testing data repository
+├── src/
+│   ├── backend/         # Core analysis logic
+│   └── frontend/        # PyQt5 GUI implementation
+├── main.py              # Application entry point
+├── requirements.txt     # Dependencies
+└── setup.py            # Package configuration
+```
+
+## Usage 💡
+
+1. Launch the application:
+```bash
+python main.py
+```
+
+2. Process error logs:
+   - Place CSV files in the `csv/` directory
+   - Input expected error descriptions
+   - View analysis results and visualizations
+
+## Development 🛠️
+
+### Code Style
+
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) guidelines
+- Use descriptive variable and function names
+- Include docstrings and comments where appropriate
+
+### Testing
+
+```bash
+# Run tests
+python -m pytest tests/
+
+# Check code coverage
+python -m pytest --cov=src tests/
+```
+
+## Contributing 🤝
+
+1. Fork the repository
+2. Create a feature branch:
+```bash
+git checkout -b feature/amazing-feature
+```
+
+3. Commit your changes:
+```bash
+git commit -m 'Add amazing feature'
+```
+
+4. Push to your branch:
+```bash
+git push origin feature/amazing-feature
+```
+
+5. Open a Pull Request
+
+### Contribution Guidelines
+
+- Write clear commit messages
+- Include tests for new features
+- Update documentation as needed
+- Submit PRs to the `develop` branch
+
+## License 📝
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+Made with ❤️ by the Error Analyzer Team
+</div>

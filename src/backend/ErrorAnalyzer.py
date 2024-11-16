@@ -144,7 +144,7 @@ def main():
     analyzer = ErrorAnalyzer()
     
     # Get folder path
-    folder_path = "D:\\Harsh Data\\Coding\\Hackathon\\Wabtec Team VITBhopal\\resources\\csv\\"
+    folder_path = "csv\\"
     # folder_path = input("Enter the folder path containing CSV files: ").strip()
     
     # Validate folder path

@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 from PyQt5.QtGui import QColor
 
-from ErrorAnalyzer import ErrorAnalyzer
+from src.backend.ErrorAnalyzer import ErrorAnalyzer
 
 class ErrorAnalyzerBackend:
     def __init__(self):
@@ -21,7 +21,7 @@ class ErrorAnalyzerBackend:
         # Process CSV files
         self.analyzer.error_frequencies = defaultdict(int)
         self.analyzer.error_codes = {}
-        folder_path = "D:\\Harsh Data\\Coding\\Hackathon\\Wabtec Team VITBhopal\\resources\\csv\\"
+        folder_path = "csv\\"
         self.analyzer.analyze_folder(folder_path)
         self.categorize_errors()
 
