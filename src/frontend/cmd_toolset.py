@@ -63,7 +63,8 @@ def analyze_csv_files(folder_path):
         try:
             df = pd.read_csv(file_path)
 
-            if 'description' not in df.columns:
+            # Convert all column names to lowercase for case-insensitive comparison
+            if 'description'.lower() not in [col.lower() for col in df.columns]:
                 print("Column 'description' not found. Skipping this file.")
                 continue
 
