@@ -26,8 +26,8 @@
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/error-analyzer.git
-cd error-analyzer
+git clone https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared.git
+cd Wabtec3_BrakesGUI_shared
 ```
 
 2. Set up virtual environment:
@@ -51,13 +51,13 @@ pip install -r requirements.txt
 ```
 ErrorAnalyzer/
 ├── csv/                  # Error log CSV files
-├── data/                 # Testing data repository
+├── exploratory/          # Notebook to analyse csv data
 ├── src/
 │   ├── backend/         # Core analysis logic
 │   └── frontend/        # PyQt5 GUI implementation
 ├── main.py              # Application entry point
 ├── requirements.txt     # Dependencies
-└── setup.py            # Package configuration
+└── guidelines.txt       # Rules to follow while contributing
 ```
 
 ## Usage 💡
@@ -71,6 +71,30 @@ python main.py
    - Place CSV files in the `csv/` directory
    - Input expected error descriptions
    - View analysis results and visualizations
+
+OR 
+
+## Use the GUI 💻
+  <br/>
+
+  ### A) Import the folder :
+  <p align="left">
+    <img src="assets/ss2.png" alt="Screenshot 1" width="400"/>
+  </p>
+
+  ### B) Select the folder containing csv files :
+  <p align="left">
+    <img src="assets/ss3.png" alt="Screenshot 2" width="400"/>
+  </p>
+
+  ### C) Wait for the files to be read ... ⌛
+  
+  ### D) View the Bar Chart and Pie Chart:
+  <p align="left">
+    <img src="assets/ss4.png" alt="Screenshot 3" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+    <img src="assets/ss5.png" alt="Screenshot 4" width="400" height="250" style="display: inline-block;"/>
+  </p>
+
 
 ## Development 🛠️
 
@@ -124,5 +148,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-Made with ❤️ by the Error Analyzer Team
+Made with ❤️ by Team ^_^ - Exceed 3.0
 </div>

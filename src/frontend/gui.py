@@ -54,6 +54,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         self.placeholder_widget = QWidget()
         placeholder_layout = QVBoxLayout(self.placeholder_widget)
         placeholder_label = QLabel("Please select a folder containing CSV files\nFile → Import Folder")
+        placeholder_label.setStyleSheet("font-size: 24px;")
         placeholder_label.setAlignment(Qt.AlignCenter)
         placeholder_layout.addWidget(placeholder_label)
         
@@ -163,7 +164,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
     def show_credits(self):
         credits_text = """
         Error Analyzer
-        Version 1.0
+        Version 1.0.0
         
         Developed by:
         Akhand Pratap Tiwari
