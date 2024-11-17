@@ -28,13 +28,13 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         menubar = self.menuBar()
         
         # File menu
-        file_menu = menubar.addMenu('File')
-        import_action = file_menu.addAction('Import Folder')
+        # file_menu = menubar.addMenu('File')
+        import_action = menubar.addAction('Open Folder')
         import_action.triggered.connect(self.import_folder)
 
         # Help menu
-        help_menu = menubar.addMenu('Help')
-        help_action = help_menu.addAction('Help')
+        # help_menu = menubar.addMenu('Help')
+        help_action = menubar.addAction('Help')
         help_action.triggered.connect(self.show_help)
 
         # Credits menu
@@ -64,8 +64,8 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         self.main_content_widget.hide()  # Hide content initially
 
         # Setup main content
-        left_widget = QWidget()
-        left_layout = QVBoxLayout(left_widget)
+        right_widget = QWidget()
+        right_layout = QVBoxLayout(right_widget)
 
         # Chart type selection
         chart_group = QGroupBox("Chart Type")
@@ -78,7 +78,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         chart_layout.addWidget(self.bar_radio)
         chart_layout.addWidget(self.pie_radio)
         chart_group.setLayout(chart_layout)
-        left_layout.addWidget(chart_group)
+        right_layout.addWidget(chart_group)
 
         # Scrollable area for checkboxes
         scroll = QScrollArea()
@@ -87,7 +87,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         self.checkbox_layout = QVBoxLayout(scroll_content)
 
         scroll.setWidget(scroll_content)
-        left_layout.addWidget(scroll)
+        right_layout.addWidget(scroll)
 
         # Select/Deselect All buttons
         btn_layout = QHBoxLayout()
@@ -97,18 +97,18 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         deselect_all_btn.clicked.connect(self.deselect_all)
         btn_layout.addWidget(select_all_btn)
         btn_layout.addWidget(deselect_all_btn)
-        left_layout.addLayout(btn_layout)
+        right_layout.addLayout(btn_layout)
 
-        # Right side - Plot
-        right_widget = QWidget()
-        right_layout = QVBoxLayout(right_widget)
+        # Left side - Plot
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        right_layout.addWidget(self.canvas)
+        left_layout.addWidget(self.canvas)
 
         # Add widgets to main content layout
-        self.main_content_layout.addWidget(left_widget, stretch=1)
-        self.main_content_layout.addWidget(right_widget, stretch=2)
+        self.main_content_layout.addWidget(left_widget, stretch=5)
+        self.main_content_layout.addWidget(right_widget, stretch=1)
 
         self.show()
 
