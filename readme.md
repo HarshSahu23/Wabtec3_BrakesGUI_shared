@@ -79,20 +79,20 @@ OR
 
   ### A) Import the folder :
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/main/assets/ss2.png" alt="Screenshot 1" width="400"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS2.png" alt="Screenshot 1" width="400"/>
   </p>
 
   ### B) Select the folder containing csv files :
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/main/assets/ss3.png" alt="Screenshot 2" width="400"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS3.png" alt="Screenshot 2" width="400"/>
   </p>
 
   ### C) Wait for the files to be read ... ⌛
   
   ### D) View the Bar Chart and Pie Chart:
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/main/assets/ss4.png" alt="Screenshot 3" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/main/assets/ss5.png" alt="Screenshot 4" width="400" height="250" style="display: inline-block;"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS4.png" alt="Screenshot 3" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS5.png" alt="Screenshot 4" width="400" height="250" style="display: inline-block;"/>
   </p>
 
 
