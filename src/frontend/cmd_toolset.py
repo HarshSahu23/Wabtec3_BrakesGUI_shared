@@ -54,7 +54,7 @@ def analyze_csv_files(folder_path):
     #         print(f"Error processing file '{file}': {e}")
 
 
-    #If we want to display a graph using matplotlib
+    #If we want to display a graph using matplotlib and there is a save to local system
 
     for file in csv_files:
         file_path = os.path.join(folder_path, file)
