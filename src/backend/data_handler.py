@@ -456,6 +456,8 @@ if __name__ == "__main__":
         print(f"ECF Rows: {len(dh.ecf)}")
         print(f"DMP Rows: {len(dh.dmp)}")
         
+        print(f"DMP Freq Summary:\n\tIndices: {dh.dmp_freq_summary.index}\n\tValues: {dh.dmp_freq_summary.values}")
+        
     except Exception as e:
         logging.error(f"Critical error in main execution: {e}")
         print("Data processing failed. Check logs for details.")
