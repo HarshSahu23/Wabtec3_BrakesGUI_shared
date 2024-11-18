@@ -4,7 +4,8 @@ import os
 import logging
 from tqdm import tqdm
 from enum import Enum
-import tabulate
+import sys
+# import tabulate
 
 # Configure logging
 logging.basicConfig(
