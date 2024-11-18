@@ -155,7 +155,7 @@ class DataHandler:
             logging.error(f"ECF formatting error: {e}")
             return pd.DataFrame()
 
-    def get_file_class(self, file_path):
+    def __get_file_class(self, file_path):
         """
         Determine file class with more robust type detection.
         
@@ -199,7 +199,7 @@ class DataHandler:
             logging.error(f"Unexpected error in file classification: {e}")
             return FileClasses.UNKNOWN
 
-    def read_dmp_from_csv_file(self, file_path):
+    def __read_dmp_from_csv_file(self, file_path):
         """
         Read DMP file with comprehensive error handling.
         
@@ -228,7 +228,7 @@ class DataHandler:
             logging.error(f"Unexpected error reading DMP file {file_path}: {e}")
             return pd.DataFrame()
 
-    def read_ecl_ecf_from_csv_file(self, file_path):
+    def __read_ecl_ecf_from_csv_file(self, file_path):
         """
         Read and format ECL and ECF from CSV with robust error handling.
         
@@ -265,7 +265,7 @@ class DataHandler:
             logging.error(f"Error processing ECL/ECF file {file_path}: {e}")
             return pd.DataFrame(), pd.DataFrame()
 
-    def read_csv_from_folder(self, folder_path):
+    def __read_csv_from_folder(self, folder_path):
         """
         Read and merge CSV files from folder with comprehensive error handling.
         
@@ -288,10 +288,10 @@ class DataHandler:
 
             for csv_file_path in tqdm(csv_files, desc="Reading Files"):
                 try:
-                    file_type = self.get_file_class(csv_file_path)
+                    file_type = self.__get_file_class(csv_file_path)
                     
                     if file_type == FileClasses.ECL_ECF:
-                        df_ecl, df_ecf = self.read_ecl_ecf_from_csv_file(csv_file_path)
+                        df_ecl, df_ecf = self.__read_ecl_ecf_from_csv_file(csv_file_path)
                         
                         if not df_ecl.empty:
                             merged_df_ecl = pd.concat([merged_df_ecl, df_ecl])
@@ -299,7 +299,7 @@ class DataHandler:
                             merged_df_ecf = pd.concat([merged_df_ecf, df_ecf])
                     
                     elif file_type == FileClasses.DMP_LOG:
-                        df_dmp = self.read_dmp_from_csv_file(csv_file_path)
+                        df_dmp = self.__read_dmp_from_csv_file(csv_file_path)
                         
                         if not df_dmp.empty:
                             merged_dmp = pd.concat([merged_dmp, df_dmp])
@@ -322,7 +322,7 @@ class DataHandler:
             logging.error(f"Unexpected error reading CSV files: {e}")
             return merged_df_ecl, merged_df_ecf, merged_dmp
 
-    def get_ecl_freq_summary(self, df_ecl_fmtd):
+    def __get_ecl_freq_summary(self, df_ecl_fmtd):
         """
         Get ECL frequency summary with error handling.
         
@@ -349,7 +349,7 @@ class DataHandler:
             logging.error(f"Error generating ECL frequency summary: {e}")
             return pd.DataFrame()
 
-    def get_dmp_freq_summary(self, df_dmp):
+    def __get_dmp_freq_summary(self, df_dmp):
         """
         Get DMP frequency summary with error handling.
         
@@ -371,43 +371,7 @@ class DataHandler:
             logging.error(f"Error generating DMP frequency summary: {e}")
             return pd.Series()
 
-    def set_folder(self, folder_path):
-        """
-        Set folder and process files with comprehensive error handling.
-        
-        Args:
-            folder_path (str): Path to the folder containing CSV files
-        """
-        try:
-            self.__folder_path = folder_path
-            self.ecl, self.ecf, self.dmp = self.read_csv_from_folder(self.__folder_path)
-            
-            # Validate processing results
-            if self.ecl.empty:
-                logging.warning("No ECL data processed")
-            if self.ecf.empty:
-                logging.warning("No ECF data processed")
-            if self.dmp.empty:
-                logging.warning("No DMP data processed")
-
-            self.ecl_freq_summary = self.get_ecl_freq_summary(self.ecl)
-            
-            self.filtered_dmp = self.filter_dmp(self.dmp)
-            self.dmp_freq_summary = self.get_dmp_freq_summary(self.filtered_dmp)
-            
-        except Exception as e:
-            logging.error(f"Error setting folder: {e}")
-            # Reset to empty state if processing fails
-            self.ecl = pd.DataFrame()
-            self.ecf = pd.DataFrame()
-            self.dmp = pd.DataFrame()
-            self.filtered_dmp = pd.DataFrame()
-            self.dmp_freq_summary = pd.Series()
-
-    def get_folder(self):
-        return self.__folder_path
-
-    def filter_dmp(self, df_dmp):
+    def __filter_dmp(self, df_dmp):
         """
         Filter DMP dataframe with robust error handling.
         
@@ -438,6 +402,42 @@ class DataHandler:
         except Exception as e:
             logging.error(f"Error filtering DMP dataframe: {e}")
             return pd.DataFrame()
+
+    def set_folder(self, folder_path):
+        """
+        Set folder and process files with comprehensive error handling.
+        
+        Args:
+            folder_path (str): Path to the folder containing CSV files
+        """
+        try:
+            self.__folder_path = folder_path
+            self.ecl, self.ecf, self.dmp = self.__read_csv_from_folder(self.__folder_path)
+            
+            # Validate processing results
+            if self.ecl.empty:
+                logging.warning("No ECL data processed")
+            if self.ecf.empty:
+                logging.warning("No ECF data processed")
+            if self.dmp.empty:
+                logging.warning("No DMP data processed")
+
+            self.ecl_freq_summary = self.__get_ecl_freq_summary(self.ecl)
+            
+            self.filtered_dmp = self.__filter_dmp(self.dmp)
+            self.dmp_freq_summary = self.__get_dmp_freq_summary(self.filtered_dmp)
+            
+        except Exception as e:
+            logging.error(f"Error setting folder: {e}")
+            # Reset to empty state if processing fails
+            self.ecl = pd.DataFrame()
+            self.ecf = pd.DataFrame()
+            self.dmp = pd.DataFrame()
+            self.filtered_dmp = pd.DataFrame()
+            self.dmp_freq_summary = pd.Series()
+
+    def get_folder(self):
+        return self.__folder_path
 
 if __name__ == "__main__":
     try:
