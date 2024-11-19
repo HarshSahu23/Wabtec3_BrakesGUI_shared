@@ -53,7 +53,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         # Create placeholder widget
         self.placeholder_widget = QWidget()
         placeholder_layout = QVBoxLayout(self.placeholder_widget)
-        placeholder_label = QLabel("Please select a folder containing CSV files\nFile → Import Folder")
+        placeholder_label = QLabel("Please select a folder containing CSV files\nClick 'Open Folder' in menu bar")
         placeholder_label.setStyleSheet("font-size: 24px;")
         placeholder_label.setAlignment(Qt.AlignCenter)
         placeholder_layout.addWidget(placeholder_label)
@@ -151,7 +151,7 @@ class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
         Error Analyzer Help:
         
         1. Import Data:
-           - Click File -> Import Folder
+           - Click Open Folder in menu bar
            - Select a folder containing CSV files
         
         2. Analyze Errors:
