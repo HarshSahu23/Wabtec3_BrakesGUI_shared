@@ -1,7 +1,5 @@
 import os
-import logging
 
-# file_validators/folder_validator.py
 class FolderValidator:
     @staticmethod
     def validate_folder(folder_path):

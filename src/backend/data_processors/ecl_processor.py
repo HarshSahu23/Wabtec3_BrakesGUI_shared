@@ -1,4 +1,3 @@
-# data_processors/ecl_processor.py
 import pandas as pd
 import logging
 from backend.utils.exceptions import FileProcessingError

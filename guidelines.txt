@@ -5,7 +5,7 @@ Naming Conventions:
 
 Creating installer:
     Install "pyinstaller" using pip.
-    Use command "pyinstaller --exclude-module PySide6 main.py" from root dir for GUI Application.
+    Use command "pyinstaller --exclude-module PySide6 src/main.py" from root dir for GUI Application.
     Use command "pyinstaller --paths=src --exclude-module PySide6 src/frontend/cmd_toolset.py" from root dir for CLI Application.
     Look inside "dist" folder after running these commands to see the executables. 
     Also excluding "PySide6" binding as multiple bindings were creating problem for the installer pyinstaller.

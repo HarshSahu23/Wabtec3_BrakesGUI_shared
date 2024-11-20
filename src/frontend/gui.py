@@ -1,5 +1,3 @@
-# gui.py
-
 import sys
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,

@@ -1,4 +1,3 @@
-# file_handlers/file_classifier.py
 import os
 import logging
 import pandas as pd

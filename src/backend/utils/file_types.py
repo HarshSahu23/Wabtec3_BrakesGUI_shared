@@ -1,4 +1,3 @@
-# utils/file_types.py
 from enum import Enum
 
 class FileClasses(Enum):
