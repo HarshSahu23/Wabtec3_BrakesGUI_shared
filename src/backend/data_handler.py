@@ -1,12 +1,7 @@
-# data_handler.py
 import glob
 import pandas as pd
 import logging
 from tqdm import tqdm
-import sys
-import os
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
-# from . import utils
 from backend.utils.logging_config import configure_logging
 from backend.utils.exceptions import FileProcessingError
 from backend.utils.folder_validator import FolderValidator
