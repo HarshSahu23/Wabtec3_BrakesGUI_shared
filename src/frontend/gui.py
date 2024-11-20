@@ -10,7 +10,7 @@ from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from src.backend.data_handler import DataHandler
+from backend.data_handler import DataHandler
 
 class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
     def __init__(self):

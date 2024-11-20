@@ -1,7 +1,7 @@
 import os
 import sys
 sys.path.append('../')
-import pandas as pd
+# import pandas as pd
 from tabulate import tabulate
 from backend.data_handler import DataHandler
 from backend.plotter import Plotter
