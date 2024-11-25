@@ -1,23 +1,22 @@
 from matplotlib import pyplot as plt
-import seaborn as sns
 import math
 
 class Plotter:
     def plot_bar_chart(x, y, figsize=(10, 3), xlabel="Errors", ylabel="Frequency"):
-        plt.figure(figsize=figsize)
-        plt.xlabel(xlabel=xlabel)
-        plt.ylabel(ylabel=ylabel)
+        # Create a bar chart
+        fig, ax = plt.subplots(figsize=figsize)
+        bars = ax.bar(x, y)
+
+        # Add bar labels
+        ax.bar_label(bars, label_type='edge', padding = 4)  # 'edge' places labels at the bar's edge; use 'center' for center placement
+
+        # Add labels and title
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_title('Bar Chart with Labels')
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
 
-        ax = sns.barplot(x=x, y=y)
-
-        for p in ax.patches:
-            bar_height = p.get_height()
-            bar_x_pos = p.get_x()
-            bar_width = p.get_width()
-            ax.annotate(int(bar_height), (bar_x_pos + bar_width / 2.0, bar_height),  # Position at top of bar
-                        ha='center', va='bottom')  # Centered horizontally, slightly above the bar
         plt.show()
 
     def plot_pie_chart(labels, data, figsize=(10, 10)):

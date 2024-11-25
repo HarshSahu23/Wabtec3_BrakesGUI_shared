@@ -15,9 +15,7 @@ def build_minimal_exe(script_path, output_name=None):
         output_name = os.path.splitext(os.path.basename(script_path))[0]
     command = [
         script_path,
-        '--noconsole',  # No console window. Disable this = logs the python output to console. 
         '--clean',  # Clean cache before building
-        # '--noupx',  # Disable UPX compression (can sometimes increase size)
     ]
     command.extend(['--specpath', 'build_scripts'])
     
