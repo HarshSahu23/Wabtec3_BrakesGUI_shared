@@ -5,7 +5,7 @@
 
 ### Creating installer:
 - Install "pyinstaller" using pip.
-- If you need to add any exlusion to module list then add them to `build_scripts\exclude_modules.py`
+- If you need to add any exlusion to module list then add them to `build_scripts\exclude_modules.py`, this helps to reduce the exe build size.
 - Use command `python.exe build_scripts/build_exe.py src/main.py <OPTIONAL: output_file_name>` from root dir to build exe for GUI Application.
 - Use command `pyinstaller --paths=src --exclude-module PySide6 src/frontend/cmd_toolset.py` from root dir to build exe for CLI Application.
 - Look inside `dist` folder after running these commands to see the executables. 
