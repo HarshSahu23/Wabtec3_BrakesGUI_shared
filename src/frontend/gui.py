@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QSplitter, QScrollArea, QCheckBox, QButtonGroup,
-    QRadioButton, QGroupBox, QMainWindow, QMenuBar, QFileDialog, QMessageBox
+    QPushButton, QScrollArea, QCheckBox, QRadioButton, 
+    QGroupBox, QMainWindow, QFileDialog, QMessageBox
 )
 from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
