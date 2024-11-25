@@ -63,8 +63,7 @@ pip install -r requirements.txt
 │                             This is not present in repo but will be created during build.
 │                             Don't commit this folder. 
 ├── exploratory             # Containes jupyter notebook for exploratory analysis.
-│   ├── explore.ipynb       # Used to develop functions early on. 
-│   └── explore_plot.ipynb  # Used to develop plotting functions.
+│   └── explore.ipynb       # Used to develop functions early on. 
 ├── instructions.md         # Some common instructions on naming conventions and building exe.
 ├── readme.md               # Containes readme instructions.
 ├── requirements.txt        # Containes requirements needed to be installed before start working. 
