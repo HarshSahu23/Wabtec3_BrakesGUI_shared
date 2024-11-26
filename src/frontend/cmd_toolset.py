@@ -19,11 +19,6 @@ def import_folder(folder_path=None):
     dh = DataHandler(folder_path)
     return dh
 
-
-def exit_cli():
-    sys.exit(0)
-
-
 def plot_bar(tags=None, dh: DataHandler = None):
     try:
         filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary['Description'].isin(
@@ -159,7 +154,7 @@ def main():
                 validate_data_handler(dh)
                 show_summary(dh)
             elif args.action == "exit":
-                exit_cli()
+                sys.exit(0)
             elif args.action == "bar":
                 validate_data_handler(dh)
                 plot_bar(args.tags, dh)

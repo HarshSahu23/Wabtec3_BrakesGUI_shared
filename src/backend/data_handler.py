@@ -140,6 +140,7 @@ class DataHandler:
             folder_path (str): Path to the folder containing CSV files
         """
         try:
+            FolderValidator.validate_folder(folder_path)
             self.__folder_path = folder_path
             logging.info(f'Reading files from path: {folder_path}')
             self.ecl, self.ecf, self.dmp = self.__read_csv_from_folder(self.__folder_path)
@@ -171,6 +172,17 @@ class DataHandler:
     def get_folder(self):
         """Get current folder path."""
         return self.__folder_path
+
+    def print_report(self):
+        print(f"ECL Rows: {len(self.ecl)}")
+        print(f"ECF Rows: {len(self.ecf)}")
+        print(f"DMP Rows: {len(self.dmp)}")
+        
+        if not self.dmp_freq_summary.empty:
+            print("\nDMP Frequency Summary:")
+            print(f"\tIndices: {self.dmp_freq_summary.index}")
+            print(f"\tValues: {self.dmp_freq_summary.values}")
+
 
 # main.py
 if __name__ == "__main__":
