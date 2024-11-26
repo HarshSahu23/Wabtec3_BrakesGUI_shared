@@ -6,8 +6,39 @@ from tabulate import tabulate
 from backend.data_handler import DataHandler
 from backend.plotter import Plotter
 
+def show_help():
+    help_text = """
+    Available commands:
+    
+    1. show summary
+        - Displays the summary table of descriptions and their frequencies.
+
+    2. bar_chart <tags>
+        - Displays a bar chart for specified tags.
+        - Example: bar_chart tag1 tag2
+
+    3. pie_chart <tags>
+        - Displays a pie chart for specified tags.
+        - Example: pie_chart tag1 tag2
+
+    4. barchart
+        - Displays a bar chart for all descriptions and their frequencies.
+
+    5. piechart
+        - Displays a pie chart for all descriptions and their frequencies.
+
+    6. help
+        - Shows this help message with available commands.
+
+    7. exit
+        - Exits the CMD Toolset.
+    """
+    print(help_text)
+
 def main():
     print("Welcome to CMD Toolset")
+
+    # Take the folder path input first, no commands shown yet
     folder_path = input("Enter the folder path containing CSV files: ").strip()
     if not os.path.exists(folder_path):
         print(f"Folder '{folder_path}' does not exist.")
@@ -25,8 +56,11 @@ def main():
     print("\nSummary Table:")
     print(tabulate(summary_df, headers='keys', tablefmt='grid'))
 
+    # Now, the user can type commands
+
     while True:
-        command = input("\nEnter a command (show summary, bar_chart <tags>, pie_chart <tags>, barchart, piechart, exit): ").strip()
+        command = input("\nEnter a command (type 'help' for a list of available commands): ").strip()
+
         if command.lower() == "exit":
             print("Exiting CMD Toolset.")
             break
@@ -81,8 +115,11 @@ def main():
             )
             print("Whole frequency pie chart created.")
 
+        elif command.lower() == "help":
+            show_help()
+
         else:
-            print("Invalid command. Try again.")
+            print("Invalid command. Type 'help' to see the available options.")
 
 if __name__ == "__main__":
     main()
