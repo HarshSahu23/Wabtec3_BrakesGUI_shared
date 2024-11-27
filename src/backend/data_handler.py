@@ -174,14 +174,35 @@ class DataHandler:
         return self.__folder_path
 
     def print_report(self):
-        print(f"ECL Rows: {len(self.ecl)}")
-        print(f"ECF Rows: {len(self.ecf)}")
-        print(f"DMP Rows: {len(self.dmp)}")
+        """
+        Print a detailed report of processed data, including:
+        - Total number of rows for ECL, ECF, and DMP datasets
+        - Frequency summaries for DMP and ECL
+        - Basic statistics and processing status
+        """
+        print("=" * 20 + "DATA PROCESSING REPORT" + "=" * 20)
+        
+        print("\nDATA SUMMARY:")
+        print(f"ECL Dataset: {len(self.ecl)} rows")
+        print(f"ECF Dataset: {len(self.ecf)} rows")
+        print(f"DMP Dataset: {len(self.dmp)} rows")
+        print(f"Filtered DMP Dataset: {len(self.filtered_dmp)} rows")
+        
+        if not self.ecl_freq_summary.empty:
+            print("\nECL FREQUENCY SUMMARY:")
+            print(self.ecl_freq_summary)
         
         if not self.dmp_freq_summary.empty:
-            print("\nDMP Frequency Summary:")
-            print(f"\tIndices: {self.dmp_freq_summary.index}")
-            print(f"\tValues: {self.dmp_freq_summary.values}")
+            print("\nDMP FREQUENCY SUMMARY:")
+            print(self.dmp_freq_summary)
+        
+        print("\nPROCESSING STATUS:")
+        status = ""
+        status += "\nECL: " + {0: "SUCCESS", 1: "FAIL"}[self.ecl.empty] 
+        status += "\nECF: " + {0: "SUCCESS", 1: "FAIL"}[self.ecf.empty] 
+        status += "\nDMP: " + {0: "SUCCESS", 1: "FAIL"}[self.dmp.empty] 
+        print(f"OVERALL STATUS")
+        print(status)
 
 
 # main.py

@@ -44,15 +44,21 @@ class Plotter:
         bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
         kw = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
         
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1)/2. + p.theta1
-            y = math.sin(ang * math.pi / 180)
-            x = math.cos(ang * math.pi / 180)
-            horizontalalignment = {-1: "right", 1: "left"}[int(math.copysign(1, x))]
-            connectionstyle = f"angle,angleA=0,angleB={ang},rad=16"
-            kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            # Using this function for label arrangement
-            xt, yt = Plotter.polar_projection(2, 1.5, ang * math.pi / 180)
-            ax.annotate(labels[i], xy=(x, y), xytext=(xt, yt), horizontalalignment=horizontalalignment, **kw)
+        try:
+            for i, p in enumerate(wedges):
+                ang = (p.theta2 - p.theta1)/2. + p.theta1
+                y = math.sin(ang * math.pi / 180)
+                x = math.cos(ang * math.pi / 180)
+                horizontalalignment = {-1: "right", 1: "left"}[int(math.copysign(1, x))]
+                connectionstyle = f"angle,angleA=0,angleB={ang},rad=16"
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                # Using this function for label arrangement
+                xt, yt = Plotter.polar_projection(2, 1.5, ang * math.pi / 180)
+                ax.annotate(labels[i], xy=(x, y), xytext=(xt, yt), horizontalalignment=horizontalalignment, **kw)
+        except Exception as e:
+            print(f"Warning: {e}")
+        finally:
+            plt.show()
 
-        plt.show()
+
+# E_SPEED_5 I_POWER_ON

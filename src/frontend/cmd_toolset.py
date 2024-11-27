@@ -7,6 +7,14 @@ from tabulate import tabulate
 from backend.data_handler import DataHandler
 from backend.plotter import Plotter
 
+class CommandStructure:
+    def __init__(self, cmd_name=None, cmd_help_txt=None, param_name=None, param_help_txt=None, nparams=None):
+        self.cmd_name = cmd_name
+        self.param_name = param_name
+        self.cmd_help_txt = cmd_help_txt
+        self.param_help_txt = param_help_txt
+        self.nparams = nparams
+
 
 def import_folder(folder_path=None):
     if not (os.path.exists(folder_path) and
@@ -21,15 +29,15 @@ def import_folder(folder_path=None):
 
 def plot_bar(tags=None, dh: DataHandler = None):
     try:
-        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary['Description'].isin(
+        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary["Description"].isin(
             tags)]
         if filtered_df.empty:
             print(f"No matching tags found for: {tags}")
         else:
             print("Drawing bar chart with given error names...")
             Plotter.plot_bar_chart(
-                x=filtered_df['Description'],
-                y=filtered_df['Frequency'],
+                x=filtered_df["Description"].tolist(),
+                y=filtered_df["Frequency"].tolist(),
                 xlabel="Description",
                 ylabel="Frequency"
             )
@@ -39,15 +47,16 @@ def plot_bar(tags=None, dh: DataHandler = None):
 
 def plot_pie(tags=None, dh: DataHandler = None):
     try:
-        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary['Description'].isin(
+        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary["Description"].isin(
             tags)]
         if filtered_df.empty:
             print(f"No matching tags found for: {tags}")
         else:
             print("Drawing pie chart with given error names...")
+            # print(tabulate(filtered_df, headers="keys", tablefmt="grid"))
             Plotter.plot_pie_chart(
-                labels=filtered_df['Description'],
-                data=filtered_df['Frequency']
+                labels=filtered_df["Description"].tolist(),
+                data=filtered_df["Frequency"].tolist()
             )
     except IndexError:
         print("Please specify tags for the pie chart (e.g., pie_chart tag1 tag2).")
@@ -56,8 +65,8 @@ def plot_pie(tags=None, dh: DataHandler = None):
 def plot_complete_bar(dh: DataHandler):
     print("Drawing complete bar chart...")
     Plotter.plot_bar_chart(
-        x=dh.ecl_freq_summary['Description'],
-        y=dh.ecl_freq_summary['Frequency'],
+        x=dh.ecl_freq_summary["Description"].tolist(),
+        y=dh.ecl_freq_summary["Frequency"].tolist(),
         xlabel="Description",
         ylabel="Frequency"
     )
@@ -66,8 +75,8 @@ def plot_complete_bar(dh: DataHandler):
 def plot_complete_pie(dh: DataHandler):
     print("Drawing complete pie chart...")
     Plotter.plot_pie_chart(
-        labels=dh.ecl_freq_summary['Description'],
-        data=dh.ecl_freq_summary['Frequency']
+        labels=dh.ecl_freq_summary["Description"].tolist(),
+        data=dh.ecl_freq_summary["Frequency"].tolist()
     )
 
 
@@ -79,7 +88,7 @@ def validate_data_handler(dh: DataHandler = None):
 
 def show_summary(dh: DataHandler):
     print("="*20 + "Summary Table" + "="*20)
-    print(tabulate(dh.ecl_freq_summary, headers='keys', tablefmt='grid'))
+    print(tabulate(dh.ecl_freq_summary, headers="keys", tablefmt="grid"))
 
 
 def create_parser():
@@ -89,41 +98,55 @@ def create_parser():
     )
 
     # Create subparsers for actions
-    subparsers = parser.add_subparsers(
-        dest="action", required=True, help="Available actions")
+    subparsers = parser.add_subparsers(dest="action", required=True, help="Available actions")
 
-    # Subparser for action 'import'
-    parser_one = subparsers.add_parser(
-        "import", help="Import folder containing CSV files.")
-    parser_one.add_argument("folder_path", type=str, help="Path to folder.")
+    commands_desc = [
+        CommandStructure("import", "Import folder containing CSV files.", "folder_path", "Path to folder."),
+        CommandStructure("exit", "Exit the command line tool."),
+        CommandStructure("bar", "Plot bar chart of given tags.", "tags", "Tags for the error description.", nparams="+"),
+        CommandStructure("pie", "Plot pie chart of given tags.", "tags", "Tags for the error description.", nparams="+"),
+        CommandStructure("c_bar", "Plot bar chart of all tags."),
+        CommandStructure("c_pie", "Plot pie chart of all tags."),
+        CommandStructure("summary", "Get the frequency summary description.")
+    ]
 
-    # Subparser for action 'exit'
-    parser_two = subparsers.add_parser(
-        "exit", help="Exit the command line tool.")
+    for cmd in commands_desc:
+        tmp_parser = subparsers.add_parser(cmd.cmd_name, help=cmd.cmd_help_txt)
+        if(cmd.param_name != None):
+            tmp_parser.add_argument(cmd.param_name, nargs=cmd.nparams, help=cmd.param_help_txt)
 
-    # Subparser for action 'bar'
-    parser_three = subparsers.add_parser(
-        "bar", help="Plot bar chart of given tags.")
-    parser_three.add_argument(
-        "tags", nargs="+", help="Tags for the error description.")
+    # # Subparser for action "import"
+    # parser_one = subparsers.add_parser(
+    #     "import", help="Import folder containing CSV files.")
+    # parser_one.add_argument("folder_path", type=str, help="Path to folder.")
 
-    # Subparser for action 'pie'
-    parser_four = subparsers.add_parser(
-        "pie", help="Plot pie chart of given tags.")
-    parser_four.add_argument(
-        "tags", nargs="+", help="Tags for the error description.")
+    # # Subparser for action "exit"
+    # parser_two = subparsers.add_parser(
+    #     "exit", help="Exit the command line tool.")
 
-    # Subparser for action 'c_bar'
-    parser_five = subparsers.add_parser(
-        "c_bar", help="Plot bar chart of all tags.")
+    # # Subparser for action "bar"
+    # parser_three = subparsers.add_parser(
+    #     "bar", help="Plot bar chart of given tags.")
+    # parser_three.add_argument(
+    #     "tags", nargs="+", help="Tags for the error description.")
 
-    # Subparser for action 'c_pie'
-    parser_six = subparsers.add_parser(
-        "c_pie", help="Plot pie chart of all tags.")
+    # # Subparser for action "pie"
+    # parser_four = subparsers.add_parser(
+    #     "pie", help="Plot pie chart of given tags.")
+    # parser_four.add_argument(
+    #     "tags", nargs="+", help="Tags for the error description.")
 
-    # Subparser for action 'summary'
-    parser_seven = subparsers.add_parser(
-        "summary", help="Get the frequency summary description.")
+    # # Subparser for action "c_bar"
+    # parser_five = subparsers.add_parser(
+    #     "c_bar", help="Plot bar chart of all tags.")
+
+    # # Subparser for action "c_pie"
+    # parser_six = subparsers.add_parser(
+    #     "c_pie", help="Plot pie chart of all tags.")
+
+    # # Subparser for action "summary"
+    # parser_seven = subparsers.add_parser(
+    #     "summary", help="Get the frequency summary description.")
 
     return parser
 
