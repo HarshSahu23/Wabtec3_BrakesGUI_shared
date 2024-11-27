@@ -1,245 +1,111 @@
-import sys
-from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QScrollArea, QCheckBox, QRadioButton, 
-    QGroupBox, QMainWindow, QFileDialog, QMessageBox
-)
-from PyQt5.QtCore import Qt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+# src/frontend/streamlit_gui.py
 
+import streamlit as st
+import plotly.graph_objects as go
+import plotly.express as px
 from backend.data_handler import DataHandler
+import tempfile
+import os
+from pathlib import Path
+from functools import lru_cache
+from frontend.compute.visualizations import create_bar_chart, create_pie_chart, create_treemap, get_color
+from frontend.utils.css_utils import inject_main_css, inject_column_css, get_metrics_css, inject_tab_css  # Import CSS utilities
+from frontend.utils.sidebar_utils import show_help, show_credits  # Import sidebar utilities
+from frontend.tabs.render_brakes_log import render_brakes_log;
+from frontend.tabs.render_dump_log import render_dump_log;
+from frontend.tabs.render_summary import render_summary;
 
-class ErrorAnalyzerGUI(QMainWindow):  # Change from QWidget to QMainWindow
+class StreamlitGUI:
     def __init__(self):
-        super().__init__()
-        self.data_handler = None  # Initialize as None
-        self.selected_errors = set()
-        self.current_chart_type = 'bar'
-        self.init_ui()
-
-    def init_ui(self):
-        self.setWindowTitle('Error Analyzer')
-        self.setGeometry(100, 100, 1200, 800)
-
-        # Create menu bar
-        menubar = self.menuBar()
+        self.init_page_config()
+        self.init_session_state()
+        # Use the get_color function from visualizations.py
+        self.get_color = get_color
+    
+    def init_page_config(self):
+        st.set_page_config(
+            page_title="Error Analyzer",
+            page_icon="📊",
+            layout="wide"
+        )
+        # Inject CSS styles using the utility function
+        inject_main_css()
+        inject_tab_css()  # Inject tab CSS
+    
+    def init_session_state(self):
+        # Existing state variables
+        if 'data_handler' not in st.session_state:
+            st.session_state.data_handler = None
+        if 'selected_errors' not in st.session_state:
+            st.session_state.selected_errors = set()
+        if 'axes_swapped' not in st.session_state:
+            st.session_state.axes_swapped = False
+        if 'sort_by' not in st.session_state:
+            st.session_state.sort_by = None
+        if 'sort_ascending' not in st.session_state:
+            st.session_state.sort_ascending = True
+        # Add new state variable for annotation toggle
+        if 'show_percentage' not in st.session_state:
+            st.session_state.show_percentage = True  # Default to showing percentages
+        if 'selected_tags' not in st.session_state:
+            st.session_state.selected_tags = set()
+        if 'error_view_mode' not in st.session_state:
+            st.session_state.error_view_mode = "Individual Errors"
+        if 'tab_badges' not in st.session_state:
+            st.session_state.tab_badges = {
+                'Brakes Log': {'count': 0, 'color': '#dc3545'},
+                'Dump Log': {'count': 0, 'color': '#fd7e14'},
+                'Summary': {'count': 0, 'color': '#198754'}
+            }
+    
+    def render(self):
+        # Create tabs for navigation
+        # Create tabs with plain text labels
+        tabs = st.tabs(["Brakes Log", "Dump Log", "Summary"])
         
-        # File menu
-        # file_menu = menubar.addMenu('File')
-        import_action = menubar.addAction('Open Folder')
-        import_action.triggered.connect(self.import_folder)
-
-        # Help menu
-        # help_menu = menubar.addMenu('Help')
-        help_action = menubar.addAction('Help')
-        help_action.triggered.connect(self.show_help)
-
-        # Credits menu
-        credits_action = menubar.addAction('Credits')
-        credits_action.triggered.connect(self.show_credits)
-
-        # Central widget to hold the main layout
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        main_layout = QHBoxLayout(central_widget)
-
-        # Create the main content widget
-        self.main_content_widget = QWidget()
-        self.main_content_layout = QHBoxLayout(self.main_content_widget)
+        # Sidebar content
+        with st.sidebar:
+            st.header("Settings")
+            uploaded_files = st.file_uploader(
+                "Upload CSV Files",
+                type=['csv'],
+                accept_multiple_files=True,
+                help="Select one or more CSV files containing error data"
+            )
+            
+            if uploaded_files:
+                with st.spinner('Processing files...'):
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        for uploaded_file in uploaded_files:
+                            temp_file_path = os.path.join(temp_dir, uploaded_file.name)
+                            with open(temp_file_path, 'wb') as f:
+                                f.write(uploaded_file.getvalue())
+                        
+                        try:
+                            print("temp directory path = ",temp_dir)
+                            st.session_state.data_handler = DataHandler(temp_dir)
+                            if len(st.session_state.data_handler.ecl_freq_summary) == 0:
+                                st.error("No data found in the uploaded files or files are empty!")
+                        except Exception as e:
+                            st.error(f"Failed to load data: {str(e)}")
+            elif not uploaded_files:
+                st.info("👆 Please upload CSV files to begin analysis")
+            show_help()
+            show_credits()
         
-        # Create placeholder widget
-        self.placeholder_widget = QWidget()
-        placeholder_layout = QVBoxLayout(self.placeholder_widget)
-        placeholder_label = QLabel("Please select a folder containing CSV files\nClick 'Open Folder' in menu bar")
-        placeholder_label.setStyleSheet("font-size: 24px;")
-        placeholder_label.setAlignment(Qt.AlignCenter)
-        placeholder_layout.addWidget(placeholder_label)
-        
-        # Add placeholder to main layout initially
-        main_layout.addWidget(self.placeholder_widget)
-        main_layout.addWidget(self.main_content_widget)
-        self.main_content_widget.hide()  # Hide content initially
+        # Render content based on active tab
+        with tabs[0]:
+            render_brakes_log()
+        with tabs[1]:
+            render_dump_log()
+            pass
+        with tabs[2]:
+            render_summary()
+            pass
 
-        # Setup main content
-        right_widget = QWidget()
-        right_layout = QVBoxLayout(right_widget)
+def main():
+    gui = StreamlitGUI()
+    gui.render()
 
-        # Chart type selection
-        chart_group = QGroupBox("Chart Type")
-        chart_layout = QHBoxLayout()
-        self.bar_radio = QRadioButton("Bar Chart")
-        self.pie_radio = QRadioButton("Pie Chart")
-        self.bar_radio.setChecked(True)
-        self.bar_radio.toggled.connect(self.update_chart)
-        self.pie_radio.toggled.connect(self.update_chart)
-        chart_layout.addWidget(self.bar_radio)
-        chart_layout.addWidget(self.pie_radio)
-        chart_group.setLayout(chart_layout)
-        right_layout.addWidget(chart_group)
-
-        # Scrollable area for checkboxes
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll_content = QWidget()
-        self.checkbox_layout = QVBoxLayout(scroll_content)
-
-        scroll.setWidget(scroll_content)
-        right_layout.addWidget(scroll)
-
-        # Select/Deselect All buttons
-        btn_layout = QHBoxLayout()
-        select_all_btn = QPushButton("Select All")
-        deselect_all_btn = QPushButton("Deselect All")
-        select_all_btn.clicked.connect(self.select_all)
-        deselect_all_btn.clicked.connect(self.deselect_all)
-        btn_layout.addWidget(select_all_btn)
-        btn_layout.addWidget(deselect_all_btn)
-        right_layout.addLayout(btn_layout)
-
-        # Left side - Plot
-        left_widget = QWidget()
-        left_layout = QVBoxLayout(left_widget)
-        self.figure = Figure()
-        self.canvas = FigureCanvas(self.figure)
-        left_layout.addWidget(self.canvas)
-
-        # Add widgets to main content layout
-        self.main_content_layout.addWidget(left_widget, stretch=5)
-        self.main_content_layout.addWidget(right_widget, stretch=1)
-
-        self.show()
-
-    def import_folder(self):
-        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder")
-        if folder_path:
-            try:
-                self.data_handler = DataHandler(folder_path)
-                if len(self.data_handler.ecl_freq_summary) == 0:
-                    QMessageBox.warning(self, "Warning", "No CSV files found in the selected folder or files are empty!")
-                    return
-                
-                # Switch from placeholder to main content
-                self.placeholder_widget.hide()
-                self.main_content_widget.show()
-                self.refresh_ui()
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to load data: {str(e)}")
-
-    def refresh_ui(self):
-        """Refresh the UI after loading new data"""
-        # Clear existing checkboxes
-        while self.checkbox_layout.count():
-            child = self.checkbox_layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
-
-        if self.data_handler and len(self.data_handler.ecl_freq_summary) > 0:
-            # Add new checkboxes
-            for _, row in self.data_handler.ecl_freq_summary.iterrows():
-                checkbox = QCheckBox(f"{row['Description']} ({row['Frequency']})")
-                checkbox.stateChanged.connect(lambda state, cb=checkbox: self.on_checkbox_change(state, cb))
-                self.checkbox_layout.addWidget(checkbox)
-
-        self.selected_errors.clear()
-        self.update_chart()
-
-    def show_help(self):
-        help_text = """
-        Error Analyzer Help:
-        
-        1. Import Data:
-           - Click Open Folder in menu bar
-           - Select a folder containing CSV files
-        
-        2. Analyze Errors:
-           - Use checkboxes to select errors
-           - Switch between Bar and Pie charts
-           - Use Select All/Deselect All for quick selection
-        """
-        QMessageBox.information(self, "Help", help_text)
-
-    def show_credits(self):
-        credits_text = """
-        Error Analyzer
-        Version 1.0.0
-        
-        Developed by:
-        Akhand Pratap Tiwari
-        Aryan Rana
-        Harsh Sahu
-        Elson Nag
-        
-        Under the guidance of:
-        Wabtec Corporation 
-
-        © 2024 Wabtec Corporation
-        """
-        QMessageBox.information(self, "Credits", credits_text)
-
-    def on_checkbox_change(self, state, checkbox=None):
-        """Handle individual checkbox changes"""
-        if checkbox:  # Single checkbox change
-            error_desc = checkbox.text().split(" (")[0]
-            if state == Qt.Checked:
-                self.selected_errors.add(error_desc)
-            else:
-                self.selected_errors.discard(error_desc)
-            self.update_chart()
-
-    def select_all(self):
-        self._set_all_checkboxes(True)
-
-    def deselect_all(self):
-        self._set_all_checkboxes(False)
-
-    def _set_all_checkboxes(self, state):
-        """Set all checkboxes without triggering individual updates"""
-        self.selected_errors.clear()
-        # Temporarily disconnect checkbox signals
-        for i in range(self.checkbox_layout.count()):
-            checkbox = self.checkbox_layout.itemAt(i).widget()
-            checkbox.blockSignals(True)
-            checkbox.setChecked(state)
-            if state:
-                error_desc = checkbox.text().split(" (")[0]
-                self.selected_errors.add(error_desc)
-            checkbox.blockSignals(False)
-
-        # Update chart once after all checkboxes are set
-        self.update_chart()
-
-    def update_chart(self):
-        self.figure.clear()
-        ax = self.figure.add_subplot(111)
-
-        if not self.data_handler or len(self.selected_errors) == 0:
-            ax.text(0.5, 0.5, 'No data to display\nSelect errors to visualize', 
-                   ha='center', va='center')
-            self.canvas.draw()
-            return
-
-        # Filter data based on selected errors
-        filtered_data = self.data_handler.ecl_freq_summary[
-            self.data_handler.ecl_freq_summary['Description'].isin(self.selected_errors)
-        ]
-
-        if not filtered_data.empty:
-            if self.bar_radio.isChecked():
-                # Bar chart
-                ax.bar(range(len(filtered_data)), filtered_data['Frequency'])
-                ax.set_xticks(range(len(filtered_data)))
-                ax.set_xticklabels(filtered_data['Description'], rotation=45, ha='right')
-                ax.set_ylabel('Frequency')
-                self.figure.subplots_adjust(bottom=0.2)
-            else:
-                # Pie chart
-                ax.pie(filtered_data['Frequency'], labels=filtered_data['Description'],
-                      autopct='%1.1f%%')
-
-        self.canvas.draw()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    gui = ErrorAnalyzerGUI()
-    sys.exit(app.exec_())
+if __name__ == "__main__":
+    main()

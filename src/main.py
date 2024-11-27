@@ -1,8 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication
-from frontend.gui import ErrorAnalyzerGUI
+from frontend.gui import StreamlitGUI
 from frontend import cmd_toolset
 import ctypes
+import streamlit.web.cli as stcli
+import sys
+import os
+from pathlib import Path
 # import qdarkstyle
 # import os
 # def load_stylesheet(file_path):
@@ -17,11 +20,25 @@ def run_cli():
 
 def run_gui():
     """Run the GUI version of the application."""
-    app = QApplication(sys.argv)
-    # stylesheet = load_stylesheet("style.qss")
-    # app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
-    gui = ErrorAnalyzerGUI()
-    sys.exit(app.exec_())
+    # Get the absolute path to the frontend directory
+    current_dir = Path(__file__).parent
+    frontend_path = current_dir / "frontend" / "gui.py"
+    
+    if not frontend_path.exists():
+        print(f"Error: Could not find {frontend_path}")
+        sys.exit(1)
+    
+    # Add the project root to PYTHONPATH
+    root_dir = str(current_dir)
+    if root_dir not in sys.path:
+        sys.path.insert(0, root_dir)
+    
+    # Set environment variables if needed
+    os.environ['STREAMLIT_THEME'] = "light"
+    
+    # Launch the Streamlit application
+    sys.argv = ["streamlit", "run", str(frontend_path)]
+    sys.exit(stcli.main())
 
 def switch_standard_streams(toSwitch):
     # When we pass --noconsole flag to pyinstaller it sets the standard
@@ -59,8 +76,9 @@ def main():
         switch_standard_streams(False)
         run_cli()
     else:
-        toggle_console(False)
-        switch_standard_streams(True)
+        # temporarily disabled for debug, pls enable later
+        # toggle_console(False)
+        # switch_standard_streams(True) 
         run_gui()
 
 if __name__ == '__main__':
