@@ -107,24 +107,54 @@ OR
 ## Use the GUI 💻
   <br/>
 
-  ### A) Import the folder :
+  ### A) Browse Files to upload :
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS2.png" alt="Screenshot 1" width="400"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S1.png" alt="Screenshot 1" width="400"/>
   </p>
 
-  ### B) Select the folder containing csv files :
+  ### B) Select files to upload :
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS3.png" alt="Screenshot 2" width="400"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" alt="Screenshot 2" width="400"/>
   </p>
 
-  ### C) Wait for the files to be read ... ⌛
+  ### C) Select/Search various errors
+  <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png" alt="Screenshot 3" width="400"/>
+  </p>
   
-  ### D) View the Bar Chart and Pie Chart:
+  ### D) Use dashboard to view charts & interact with them:
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS4.png" alt="Screenshot 3" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/fd1bf64a8bfb385290acbd3b7e065a4ddd4d6560/assets/SS5.png" alt="Screenshot 4" width="400" height="250" style="display: inline-block;"/>
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png" alt="Screenshot 4" width="400"/>
   </p>
 
+  ### E) View various charts:
+  <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+  </p>
+  <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_1.png" alt="Screenshot 5_1" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+  </p>
+  <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_2.png" alt="Screenshot 5_2" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+  </p>
+
+  ### F) Get Detailed Data of any selected errors, apply filters
+   <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S6.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+  </p>
+  <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S7.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+  </p>
+
+  ### G) View Dump Log
+    <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S8.png" alt="Screenshot 4" width="400"/>
+    </p>
+
+  ### H) Detailed Data for Dump Files
+    <p align="left">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S9.png" alt="Screenshot 4" width="400"/>
+    </p>
 
 ## Development 🛠️
 
