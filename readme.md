@@ -116,19 +116,19 @@ OR
 
   ### B) Select files to upload :
   <p align="left">
-    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" target=blank>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" alt="Screenshot 2" width="400" height="250"/>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png">
+      <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" alt="Screenshot 2" height="250" width="400" style="object-fit: cover;"/>
     </a>
   </p>
 
   ### C) Select/Search various errors
   <p align="left">
-    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png" alt="Screenshot 3" width="400" height="250"/></a>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png" height="250" width="400" style="object-fit: cover;" alt="Screenshot 3" width="400" height="250"/></a>
   </p>
   
   ### D) Use dashboard to view charts & interact with them:
   <p align="left">
-    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png" alt="Screenshot 4" width="400" height="250"/></a>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png" height="250" width="400" style="object-fit: cover;" alt="Screenshot 4" width="400" height="250"/></a>
   </p>
 
   ### E) View various charts:
