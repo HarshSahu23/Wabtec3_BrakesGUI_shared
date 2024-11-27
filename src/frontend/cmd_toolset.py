@@ -8,13 +8,31 @@ from backend.data_handler import DataHandler
 from backend.plotter import Plotter
 
 class CommandStructure:
+    """
+    A class representing the structure of a command in a CLI tool.
+    Each command has a name, optional parameters, and help text for both the command and its parameters.
+    """
+
     def __init__(self, cmd_name=None, cmd_help_txt=None, param_name=None, param_help_txt=None, nparams=None):
+        """
+        Initialize a command structure object.
+
+        Args:
+            cmd_name (str): The name of the command (e.g., 'import', 'exit').
+            cmd_help_txt (str): The help text describing the command's functionality.
+            param_name (str): The name of the parameter for the command, if any (e.g., 'folder_path').
+            param_help_txt (str): The help text describing the parameter, if any.
+            nparams (str or int): Specifies the number of parameters:
+                                  - `None` if no parameters.
+                                  - An integer for a fixed number of parameters.
+                                  - `'+'` for one or more parameters.
+                                  - `'*'` for zero or more parameters.
+        """
         self.cmd_name = cmd_name
         self.param_name = param_name
         self.cmd_help_txt = cmd_help_txt
         self.param_help_txt = param_help_txt
         self.nparams = nparams
-
 
 def import_folder(folder_path=None):
     if not (os.path.exists(folder_path) and
@@ -100,53 +118,32 @@ def create_parser():
     # Create subparsers for actions
     subparsers = parser.add_subparsers(dest="action", required=True, help="Available actions")
 
+    # This contains all the commands with their respective structure and help texts.
+    # Each `CommandStructure` instance defines a command and its attributes.
     commands_desc = [
-        CommandStructure("import", "Import folder containing CSV files.", "folder_path", "Path to folder."),
+        CommandStructure("import", "Import folder containing CSV files. Example: import path_to_folder", "folder_path", "Path to the folder contaning CSV files."),
         CommandStructure("exit", "Exit the command line tool."),
-        CommandStructure("bar", "Plot bar chart of given tags.", "tags", "Tags for the error description.", nparams="+"),
-        CommandStructure("pie", "Plot pie chart of given tags.", "tags", "Tags for the error description.", nparams="+"),
-        CommandStructure("c_bar", "Plot bar chart of all tags."),
-        CommandStructure("c_pie", "Plot pie chart of all tags."),
-        CommandStructure("summary", "Get the frequency summary description.")
+        CommandStructure("bar", "Displays a bar chart for specified tags. Example: bar tag1 tag2", "tags", "Tags for the error description.", nparams="+"),
+        CommandStructure("pie", "Displays a pie chart for specified tags. Example: pie tag1 tag2", "tags", "Tags for the error description.", nparams="+"),
+        CommandStructure("c_bar", "Displays a bar chart for all descriptions and their frequencies."),
+        CommandStructure("c_pie", "Displays a pie chart for all descriptions and their frequencies."),
+        CommandStructure("summary", "Displays the summary table of descriptions and their frequencies.")
     ]
 
+    # Automatically build subparsers from the commands structure
+    # This loop iterates through each `CommandStructure` object in `commands_desc`
+    # and generates a subparser with the appropriate parameters and help texts.
     for cmd in commands_desc:
+        # Create a subparser for the command, using its name and help text
         tmp_parser = subparsers.add_parser(cmd.cmd_name, help=cmd.cmd_help_txt)
-        if(cmd.param_name != None):
-            tmp_parser.add_argument(cmd.param_name, nargs=cmd.nparams, help=cmd.param_help_txt)
 
-    # # Subparser for action "import"
-    # parser_one = subparsers.add_parser(
-    #     "import", help="Import folder containing CSV files.")
-    # parser_one.add_argument("folder_path", type=str, help="Path to folder.")
-
-    # # Subparser for action "exit"
-    # parser_two = subparsers.add_parser(
-    #     "exit", help="Exit the command line tool.")
-
-    # # Subparser for action "bar"
-    # parser_three = subparsers.add_parser(
-    #     "bar", help="Plot bar chart of given tags.")
-    # parser_three.add_argument(
-    #     "tags", nargs="+", help="Tags for the error description.")
-
-    # # Subparser for action "pie"
-    # parser_four = subparsers.add_parser(
-    #     "pie", help="Plot pie chart of given tags.")
-    # parser_four.add_argument(
-    #     "tags", nargs="+", help="Tags for the error description.")
-
-    # # Subparser for action "c_bar"
-    # parser_five = subparsers.add_parser(
-    #     "c_bar", help="Plot bar chart of all tags.")
-
-    # # Subparser for action "c_pie"
-    # parser_six = subparsers.add_parser(
-    #     "c_pie", help="Plot pie chart of all tags.")
-
-    # # Subparser for action "summary"
-    # parser_seven = subparsers.add_parser(
-    #     "summary", help="Get the frequency summary description.")
+        # If the command has parameters, define them in the subparser
+        if cmd.param_name is not None:
+            tmp_parser.add_argument(
+                cmd.param_name,  # Name of the parameter
+                nargs=cmd.nparams,  # Number of arguments for the parameter
+                help=cmd.param_help_txt  # Help text describing the parameter
+            )
 
     return parser
 
