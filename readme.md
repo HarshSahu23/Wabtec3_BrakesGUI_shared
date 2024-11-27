@@ -108,46 +108,54 @@ OR
   <br/>
 
   ### A) Browse Files to upload :
-  <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S1.png" alt="Screenshot 1" width="400" height="250"/>
+  <p>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/raw/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S1.png">
+      <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/raw/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S1.png" alt="Screenshot 1" height="250" width="400" style="object-fit: cover;"/>
+    </a>
   </p>
 
   ### B) Select files to upload :
   <p align="left">
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" target=blank>
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S2.png" alt="Screenshot 2" width="400" height="250"/>
+    </a>
   </p>
 
   ### C) Select/Search various errors
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png" alt="Screenshot 3" width="400" height="250"/>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S3.png" alt="Screenshot 3" width="400" height="250"/></a>
   </p>
   
   ### D) Use dashboard to view charts & interact with them:
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png" alt="Screenshot 4" width="400" height="250"/>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S4.png" alt="Screenshot 4" width="400" height="250"/></a>
   </p>
 
   ### E) View various charts:
   <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_1.png" alt="Screenshot 5_1" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_2.png" alt="Screenshot 5_2" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5.png">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/></a>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_1.png">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_1.png" alt="Screenshot 5_1" width="400" height="250" style="display: inline-block; margin-right: 10px;"/></a>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_2.png">
+    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_2.png" alt="Screenshot 5_2" width="400" height="250" style="display: inline-block; margin-right: 10px;"/></a>
   </p>
 
   ### F) Get Detailed Data of any selected errors, apply filters
    <p align="left">
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S6.png" alt="Screenshot 6" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-    <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S7.png" alt="Screenshot 7" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
+    <a href = "https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S6.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S6.png" alt="Screenshot 6" width="400" height="250" style="display: inline-block; margin-right: 10px;"/></a>
+    <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S7.png"><img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S7.png" alt="Screenshot 7" width="400" height="250" style="display: inline-block; margin-right: 10px;"/></a>
   </p>
 
   ### G) View Dump Log
   <p align="left">
-  <img src = "https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S8.png" alt="screenshot 8" width="400" height="250">
+  <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S8.png">
+  <img src = "https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S8.png" alt="screenshot 8" width="400" height="250"></a>
   </p>
 
   ### H) Detailed Data for Dump Files
   <p align="left">
-  <img src = "https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S9.png" alt="screenshot 9" width="400" height="250">
+  <a href="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S9.png"><img src = "https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/81aaa1ab2971562c79e1c544864f95dd936e187b/assets/S9.png" alt="screenshot 9" width="400" height="250"></a>
   </p>
 
 
