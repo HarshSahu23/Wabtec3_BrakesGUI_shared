@@ -130,19 +130,13 @@ OR
   ### E) View various charts:
   <p align="left">
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-  </p>
-  <p align="left">
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_1.png" alt="Screenshot 5_1" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-  </p>
-  <p align="left">
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S5_2.png" alt="Screenshot 5_2" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
   </p>
 
   ### F) Get Detailed Data of any selected errors, apply filters
    <p align="left">
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S6.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
-  </p>
-  <p align="left">
     <img src="https://github.com/HarshSahu23/Wabtec3_BrakesGUI_shared/blob/89d6f4d39e1d1ce385356e2394db8c27d39bfda4/assets/S7.png" alt="Screenshot 5" width="400" height="250" style="display: inline-block; margin-right: 10px;"/>
   </p>
 
