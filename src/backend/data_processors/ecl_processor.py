@@ -1,54 +1,7 @@
 import pandas as pd
 import logging
-from backend.utils.exceptions import FileProcessingError
 
 class ECLProcessor:
-    @staticmethod
-    def format_ecl(df_ecl):
-        """
-        Format ECL dataframe with robust error handling.
-        
-        Args:
-            df_ecl (pd.DataFrame): Input dataframe
-        
-        Returns:
-            pd.DataFrame: Formatted dataframe
-        
-        Raises:
-            FileProcessingError: If formatting fails
-        """
-        try:
-            if df_ecl is None or df_ecl.empty:
-                raise ValueError("Input dataframe is empty or None")
-            
-            # Skip some rows that are not required
-            df_ecl_fmtd = df_ecl.iloc[8:].reset_index(drop=True)
-
-            # Validate split operation
-            try:
-                df_ecl_fmtd = df_ecl_fmtd.iloc[:, 0].str.split(';', expand=True)
-            except Exception as e:
-                raise FileProcessingError(f"Failed to split ECL dataframe: {e}")
-
-            # Ensure columns exist
-            if df_ecl_fmtd.empty or len(df_ecl_fmtd.columns) < 2:
-                raise FileProcessingError("Insufficient columns after splitting")
-
-            # Reassign columns
-            df_ecl_fmtd.columns = df_ecl_fmtd.iloc[0]
-
-            # Drop unrequired columns
-            df_ecl_fmtd = df_ecl_fmtd.drop(df_ecl_fmtd.columns[[0, -1]], axis=1)
-
-            # Reset the index
-            df_ecl_fmtd = df_ecl_fmtd.iloc[1:].reset_index(drop=True)
-
-            return df_ecl_fmtd
-        
-        except (ValueError, FileProcessingError) as e:
-            logging.error(f"ECL formatting error: {e}")
-            return pd.DataFrame()
-
     @staticmethod
     def get_frequency_summary(df_ecl_fmtd):
         """

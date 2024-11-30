@@ -1,5 +1,3 @@
-import matplotlib
-matplotlib.use('TkAgg')  # Use TkAgg for GUI environments
 from matplotlib import pyplot as plt
 import math
 
@@ -20,7 +18,7 @@ class Plotter:
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
 
-        plt.show()  # This should now work in a GUI environment
+        plt.show()
 
     @staticmethod
     def polar_projection(a, b, theta):
@@ -60,4 +58,7 @@ class Plotter:
         except Exception as e:
             print(f"Warning: {e}")
         finally:
-            plt.show()  # This should now work in a GUI environment
+            plt.show()
+
+
+# E_SPEED_5 I_POWER_ON

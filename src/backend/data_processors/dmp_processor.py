@@ -3,36 +3,6 @@ import logging
 
 class DMPProcessor:
     @staticmethod
-    def read_dmp(file_path):
-        """
-        Read DMP file with comprehensive error handling.
-        
-        Args:
-            file_path (str): Path to the CSV file
-        
-        Returns:
-            pd.DataFrame: Loaded dataframe or empty dataframe
-        """
-        try:
-            data = pd.read_csv(file_path, low_memory=False)
-            
-            # Additional validation
-            if data.empty:
-                logging.warning(f"Empty dataframe from file: {file_path}")
-            
-            return data
-        
-        except pd.errors.EmptyDataError:
-            logging.error(f"No columns to parse from file: {file_path}")
-            return pd.DataFrame()
-        except pd.errors.ParserError as e:
-            logging.error(f"Parsing error in file {file_path}: {e}")
-            return pd.DataFrame()
-        except Exception as e:
-            logging.error(f"Unexpected error reading DMP file {file_path}: {e}")
-            return pd.DataFrame()
-
-    @staticmethod
     def filter_dmp(df_dmp):
         """
         Filter DMP dataframe with robust error handling.

@@ -8,7 +8,7 @@ Speed3 (km/h):     Axle 3 speed
 Speed4 (km/h):     Axle 4 speed
 Odometer (km):     Travel distance
 
-Nr;Code(hex);Ticks(hex);Date;Time;SW(hex);Speed(km/h);Speed1(km/h);Speed2(km/h);Speed3(km/h);Speed4(km/h);Odometer(km);FILL_1;VENT_1;FILL_2;VENT_2;FILL_3;VENT_3;FILL_4;VENT_4;DEVICE_ON;V5;V45;ZERO_SPEED;WSP_FAILURE;V5_2;V30;V5_1;Condition;Description;
+Nr;Code(hex);Ticks(hex);Date;Time;SW(hex);Speed(km/h);Speed1(km/h);Speed2(km/h);Speed3(km/h);Speed4(km/h);Odometer(km);FILL_1;VENT_1;FILL_2;VENT_2;FILL_3;VENT_3;FILL_4;VENT_4;DEVICE_ON;V5;V45;ZERO_SPEED;WSP_FAILURE;V5_2;V30;V5_1;Condition;Description
 1;0xA000;0x00000AAC;31/7/24;13:28:13;0x000;40;40;40;40;40;0;0;0;0;0;0;0;0;0;1;1;0;0;1;0;0;1;0;I_POWER_ON
 2;0x0017;0x000057D7;31/7/24;13:28:53;0x000;34;0;0;0;0;0;1;1;1;1;1;1;1;1;1;1;0;0;1;0;0;1;0;AXLE1_LOCK
 3;0x0037;0x000057E3;31/7/24;13:28:53;0x000;34;0;0;0;0;0;1;1;1;1;1;1;1;1;1;1;0;0;1;0;0;1;0;AXLE3_LOCK

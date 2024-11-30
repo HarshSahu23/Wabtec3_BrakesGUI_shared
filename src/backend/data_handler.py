@@ -4,12 +4,10 @@ import logging
 from tqdm import tqdm
 from backend.utils.logging_config import configure_logging
 from backend.utils.folder_validator import FolderValidator
-from backend.utils.file_classifier import FileClassifier
-from backend.utils.file_types import FileClasses
+from backend.data_extractor.dataframe_classifier import DataFrameClassifier, DataFrameClasses
 from backend.data_processors.ecl_processor import ECLProcessor
-from backend.data_processors.ecf_processor import ECFProcessor
 from backend.data_processors.dmp_processor import DMPProcessor
-from backend.data_processors.ecl_error_grouper import ECLErrorGrouper
+from backend.data_extractor.dataframe_extractor import DataFrameExtractor
 
 class DataHandler:
     def __init__(self, folder_path):
@@ -30,9 +28,7 @@ class DataHandler:
             
             self.__folder_path = folder_path
             self.ecl = pd.DataFrame()
-            self.ecf = pd.DataFrame()
             self.dmp = pd.DataFrame()
-            self.grouped_ecl = pd.DataFrame()  # New attribute for grouped ECL
             self.ecl_freq_summary = pd.DataFrame()
             self.filtered_dmp = pd.DataFrame()
             self.dmp_freq_summary = pd.Series()
@@ -52,10 +48,9 @@ class DataHandler:
             folder_path (str): Path to the folder containing CSV files
         
         Returns:
-            tuple: Merged ECL, ECF, and DMP dataframes
+            tuple: Merged ECL and DMP dataframes
         """
-        merged_df_ecl = pd.DataFrame()
-        merged_df_ecf = pd.DataFrame()
+        merged_ecl = pd.DataFrame()
         merged_dmp = pd.DataFrame()
         try:
             csv_files = glob.glob(f"{folder_path}/*.csv")
@@ -63,26 +58,21 @@ class DataHandler:
 
             if len(csv_files) == 0 or csv_files == None:
                 logging.warning(f"No CSV files found in folder: {folder_path}")
-                return merged_df_ecl, merged_df_ecf, merged_dmp
+                return merged_ecl, merged_dmp
 
             for csv_file_path in tqdm(csv_files, desc="Reading Files"):
                 try:
-                    file_type = FileClassifier.get_file_class(csv_file_path)
-                    
-                    if file_type == FileClasses.ECL_ECF:
-                        df_ecl, df_ecf = self.__read_ecl_ecf_file(csv_file_path)
-                        
-                        if not df_ecl.empty:
-                            merged_df_ecl = pd.concat([merged_df_ecl, df_ecl])
-                        if not df_ecf.empty:
-                            merged_df_ecf = pd.concat([merged_df_ecf, df_ecf])
-                    
-                    elif file_type == FileClasses.DMP_LOG:
-                        df_dmp = DMPProcessor.read_dmp(csv_file_path)
-                        
-                        if not df_dmp.empty:
-                            merged_dmp = pd.concat([merged_dmp, df_dmp])
-                    
+                    df = DataFrameExtractor.get_df_from_file(csv_file_path)
+                    df_type = DataFrameClassifier.get_dataframe_class(df)
+                    # print(df)
+                    if df_type == DataFrameClasses.ECL:
+                        if not df.empty:
+                            # print("ECL file Processed")
+                            merged_ecl = pd.concat([merged_ecl, df])
+                    elif df_type == DataFrameClasses.DMP:
+                        if not df.empty:
+                            # print("DMP file Processed")
+                            merged_dmp = pd.concat([merged_dmp, df])
                     else:
                         logging.warning(f"Skipping unrecognized file: {csv_file_path}")
 
@@ -91,48 +81,14 @@ class DataHandler:
                     continue
 
             # Reset indices
-            merged_df_ecf.reset_index(drop=True, inplace=True)
-            merged_df_ecl.reset_index(drop=True, inplace=True)
+            merged_ecl.reset_index(drop=True, inplace=True)
             merged_dmp.reset_index(drop=True, inplace=True)
 
-            return merged_df_ecl, merged_df_ecf, merged_dmp
+            return merged_ecl, merged_dmp
 
         except Exception as e:
             logging.error(f"Unexpected error reading CSV files: {e}")
-            return merged_df_ecl, merged_df_ecf, merged_dmp
-
-    def __read_ecl_ecf_file(self, file_path):
-        """
-        Read and format ECL and ECF from CSV with robust error handling.
-        
-        Args:
-            file_path (str): Path to the CSV file
-        
-        Returns:
-            tuple: Formatted ECL and ECF dataframes
-        """
-        try:
-            data = pd.read_csv(file_path, low_memory=False)
-
-            if data.empty:
-                logging.warning(f"Empty dataframe from file: {file_path}")
-                return pd.DataFrame(), pd.DataFrame()
-
-            ecf_indices = data[data.iloc[:, 0].str.contains("ERROR CODE FREQUENCY", na=False)].index
-            if len(ecf_indices) == 0:
-                logging.warning(f"No ECF section found in file: {file_path}")
-                return pd.DataFrame(), pd.DataFrame()
-
-            ecf_index = ecf_indices[0]
-
-            df_ecl = ECLProcessor.format_ecl(data.iloc[0:ecf_index, ])
-            df_ecf = ECFProcessor.format_ecf(data.iloc[ecf_index:, ])
-
-            return df_ecl, df_ecf
-
-        except Exception as e:
-            logging.error(f"Error processing ECL/ECF file {file_path}: {e}")
-            return pd.DataFrame(), pd.DataFrame()
+            return merged_ecl, merged_dmp
 
     def set_folder(self, folder_path):
         """
@@ -145,18 +101,10 @@ class DataHandler:
             FolderValidator.validate_folder(folder_path)
             self.__folder_path = folder_path
             logging.info(f'Reading files from path: {folder_path}')
-            self.ecl, self.ecf, self.dmp = self.__read_csv_from_folder(self.__folder_path)
+            self.ecl, self.dmp = self.__read_csv_from_folder(self.__folder_path)
             
             if self.ecl.empty:
                 logging.warning("No ECL data processed")
-            else:
-                # Group ECL errors
-                self.grouped_ecl = ECLErrorGrouper.group_errors(self.ecl)
-                
-                # Log grouped ECL data summary
-                self._log_grouped_ecl_summary()
-            if self.ecf.empty:
-                logging.warning("No ECF data processed")
             if self.dmp.empty:
                 logging.warning("No DMP data processed")
 
@@ -164,46 +112,18 @@ class DataHandler:
             self.ecl_freq_summary = ECLProcessor.get_frequency_summary(self.ecl)
             self.filtered_dmp = DMPProcessor.filter_dmp(self.dmp)
             self.dmp_freq_summary = DMPProcessor.get_frequency_summary(self.filtered_dmp)
-            self.dmp_freq_summary = DMPProcessor.get_frequency_summary(self.filtered_dmp)
+            # print(self.filtered_dmp)
             
         except Exception as e:
             logging.error(f"Error setting folder: {e}")
             self._reset_state()
 
-    def _log_grouped_ecl_summary(self):
-            """
-            Log a summary of grouped ECL errors with detailed statistics.
-            """
-            try:
-                # Error Group Distribution
-                print("\n--- Error Group Distribution ---")
-                group_counts = self.grouped_ecl['Error Group'].value_counts()
-                for group, count in group_counts.items():
-                    print(f"{group}: {count} errors")
-
-                # Top 10 most frequent errors
-                print("\n--- Top 10 Most Frequent Errors ---")
-                error_freq = self.grouped_ecl['Description'].value_counts().head(10)
-                for error, count in error_freq.items():
-                    error_group = self.grouped_ecl[self.grouped_ecl['Description'] == error]['Error Group'].iloc[0]
-                    print(f"{error} (Group: {error_group}): {count} occurrences")
-
-                # Unique error groups
-                unique_groups = self.grouped_ecl['Error Group'].unique()
-                print(f"\nTotal Unique Error Groups: {len(unique_groups)}")
-                print("Error Groups:", ", ".join(unique_groups))
-
-            except Exception as e:
-                logging.error(f"Error logging grouped ECL summary: {e}")    
-
     def _reset_state(self):
         """Reset instance variables to empty state."""
         self.ecl = pd.DataFrame()
-        self.ecf = pd.DataFrame()
         self.dmp = pd.DataFrame()
         self.filtered_dmp = pd.DataFrame()
         self.dmp_freq_summary = pd.Series()
-        self.grouped_ecl = pd.DataFrame()  # Add reset for grouped_ecl
 
     def get_folder(self):
         """Get current folder path."""
@@ -212,7 +132,7 @@ class DataHandler:
     def print_report(self):
         """
         Print a detailed report of processed data, including:
-        - Total number of rows for ECL, ECF, and DMP datasets
+        - Total number of rows for ECL and DMP datasets
         - Frequency summaries for DMP and ECL
         - Basic statistics and processing status
         """
@@ -220,9 +140,7 @@ class DataHandler:
         
         print("\nDATA SUMMARY:")
         print(f"ECL Dataset: {len(self.ecl)} rows")
-        print(f"ECF Dataset: {len(self.ecf)} rows")
         print(f"DMP Dataset: {len(self.dmp)} rows")
-        print(f"Grouped ECL Rows: {len(dh.grouped_ecl)} rows")
         print(f"Filtered DMP Dataset: {len(self.filtered_dmp)} rows")
         
         if not self.ecl_freq_summary.empty:
@@ -236,7 +154,6 @@ class DataHandler:
         print("\nPROCESSING STATUS:")
         status = ""
         status += "\nECL: " + {0: "SUCCESS", 1: "FAIL"}[self.ecl.empty] 
-        status += "\nECF: " + {0: "SUCCESS", 1: "FAIL"}[self.ecf.empty] 
         status += "\nDMP: " + {0: "SUCCESS", 1: "FAIL"}[self.dmp.empty] 
         print(f"OVERALL STATUS")
         print(status)
@@ -253,7 +170,6 @@ if __name__ == "__main__":
         # Print processing results
         print("Data processed successfully.")
         print(f"ECL Rows: {len(dh.ecl)}")
-        print(f"ECF Rows: {len(dh.ecf)}")
         print(f"DMP Rows: {len(dh.dmp)}")
         
         if not dh.dmp_freq_summary.empty:
