@@ -34,7 +34,7 @@ def display_intro(image_path):
     """
     ascii_art = render_image_to_ascii(image_path)
     help_text = """
-Welcome to the  Wabtec Interactive CLI Tool!
+Welcome to the Wabtec Interactive CLI Tool!
 -------------------------------------
 Available Commands:
   1. import <folder_path>    Import folder containing CSV files.
