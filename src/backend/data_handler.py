@@ -116,9 +116,9 @@ class DataHandler:
             
         except Exception as e:
             logging.error(f"Error setting folder: {e}")
-            self._reset_state()
+            self.__reset_state()
 
-    def _reset_state(self):
+    def __reset_state(self):
         """Reset instance variables to empty state."""
         self.ecl = pd.DataFrame()
         self.dmp = pd.DataFrame()
@@ -157,26 +157,3 @@ class DataHandler:
         status += "\nDMP: " + {0: "SUCCESS", 1: "FAIL"}[self.dmp.empty] 
         print(f"OVERALL STATUS")
         print(status)
-
-
-# main.py
-if __name__ == "__main__":
-    try:
-        folder_path = "csv"
-        FolderValidator.validate_folder(folder_path)
-        
-        dh = DataHandler(folder_path)
-        
-        # Print processing results
-        print("Data processed successfully.")
-        print(f"ECL Rows: {len(dh.ecl)}")
-        print(f"DMP Rows: {len(dh.dmp)}")
-        
-        if not dh.dmp_freq_summary.empty:
-            print("\nDMP Frequency Summary:")
-            print(f"\tIndices: {dh.dmp_freq_summary.index}")
-            print(f"\tValues: {dh.dmp_freq_summary.values}")
-        
-    except Exception as e:
-        logging.error(f"Critical error in main execution: {e}")
-        print("Data processing failed. Check logs for details.")

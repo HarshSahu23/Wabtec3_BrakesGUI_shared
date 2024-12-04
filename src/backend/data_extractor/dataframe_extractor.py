@@ -165,7 +165,3 @@ class DataFrameExtractor:
         df = DataFrameExtractor.__trim_df(df)
         df = DataFrameExtractor.__extract_main_section(df, file_path)
         return df
-    
-# if __name__ == "__main__":
-#     df = DataFrameExtractor.get_df_from_file("csv\Error 2.csv")
-#     print(df)
