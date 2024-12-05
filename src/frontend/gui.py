@@ -14,6 +14,18 @@ from frontend.utils.sidebar_utils import show_help, show_credits  # Import sideb
 from frontend.tabs.render_brakes_log import render_brakes_log;
 from frontend.tabs.render_dump_log import render_dump_log;
 from frontend.tabs.render_summary import render_summary;
+import glob
+import tkinter as tk
+from tkinter import filedialog
+
+@lru_cache(maxsize=32)
+def process_folder(folder_path: str):
+    """Cache folder processing to avoid recomputing"""
+    return DataHandler(folder_path)
+
+def get_csv_files(folder_path: str) -> list:
+    """Efficiently get CSV files using pathlib"""
+    return [f for f in Path(folder_path).glob('*.csv')]
 
 class StreamlitGUI:
     def __init__(self):
@@ -66,30 +78,41 @@ class StreamlitGUI:
         # Sidebar content
         with st.sidebar:
             st.header("Settings")
-            uploaded_files = st.file_uploader(
-                "Upload CSV Files",
-                type=['csv'],
-                accept_multiple_files=True,
-                help="Select one or more CSV files containing error data"
-            )
-            
-            if uploaded_files:
-                with st.spinner('Processing files...'):
-                    with tempfile.TemporaryDirectory() as temp_dir:
-                        for uploaded_file in uploaded_files:
-                            temp_file_path = os.path.join(temp_dir, uploaded_file.name)
-                            with open(temp_file_path, 'wb') as f:
-                                f.write(uploaded_file.getvalue())
-                        
-                        try:
-                            print("temp directory path = ",temp_dir)
-                            st.session_state.data_handler = DataHandler(temp_dir)
-                            if len(st.session_state.data_handler.ecl_freq_summary) == 0:
-                                st.error("No data found in the uploaded files or files are empty!")
-                        except Exception as e:
-                            st.error(f"Failed to load data: {str(e)}")
-            elif not uploaded_files:
-                st.info("👆 Please upload CSV files to begin analysis")
+
+            # Function to open folder selection dialog
+            def select_folder():
+                root = tk.Tk()
+                root.withdraw()  # Hide the main window
+                root.attributes('-topmost', True)  # Bring the dialog to the front
+                folder_selected = filedialog.askdirectory()
+                root.destroy()
+                return folder_selected
+
+            # Replace file uploader with 'Upload Folder' button
+            if st.button("Upload Folder"):
+                folder_path = select_folder()
+                if folder_path:
+                    with st.spinner('Processing files...'):
+                        csv_files = get_csv_files(folder_path)
+                        if csv_files:
+                            try:
+                                # Use cached processing
+                                st.session_state.data_handler = process_folder(folder_path)
+                                
+                                if len(st.session_state.data_handler.ecl_freq_summary) == 0:
+                                    st.error("No data found in the CSV files!")
+                                else:
+                                    st.success("Files processed successfully")
+                                    with st.expander("Processed Files"):
+                                        for file in csv_files:
+                                            st.write(file.name)
+                            except Exception as e:
+                                st.error(f"Error: {str(e)}")
+                        else:
+                            st.error("No CSV files found in folder")
+                else:
+                    st.info("👆 Please select a folder")
+
             show_help()
             show_credits()
         
