@@ -14,9 +14,11 @@ from frontend.utils.sidebar_utils import show_help, show_credits  # Import sideb
 from frontend.tabs.render_brakes_log import render_brakes_log;
 from frontend.tabs.render_dump_log import render_dump_log;
 from frontend.tabs.render_summary import render_summary;
+from frontend.tabs.render_settings import render_settings  # Add this import
 import glob
 import tkinter as tk
 from tkinter import filedialog
+import re  # Import regex module
 
 @lru_cache(maxsize=32)
 def process_folder(folder_path: str):
@@ -69,11 +71,17 @@ class StreamlitGUI:
                 'Dump Log': {'count': 0, 'color': '#fd7e14'},
                 'Summary': {'count': 0, 'color': '#198754'}
             }
+        if 'folder_date' not in st.session_state:
+            st.session_state.folder_date = None
+        if 'depot_name' not in st.session_state:
+            st.session_state.depot_name = None
+        if 'coach_name' not in st.session_state:
+            st.session_state.coach_name = None
     
     def render(self):
         # Create tabs for navigation
-        # Create tabs with plain text labels
-        tabs = st.tabs(["Brakes Log", "Dump Log", "Summary"])
+        # Update tabs to include Settings
+        tabs = st.tabs(["Brakes Log", "Dump Log", "Summary", "Settings"])
         
         # Sidebar content
         with st.sidebar:
@@ -96,6 +104,17 @@ class StreamlitGUI:
                         csv_files = get_csv_files(folder_path)
                         if csv_files:
                             try:
+                                # Parse folder name
+                                folder_name = os.path.basename(folder_path)
+                                match = re.match(r'(\d{2}-\d{2}-\d{4})_(.+)_(.+)', folder_name)
+                                if match:
+                                    st.session_state.folder_date = match.group(1)
+                                    st.session_state.depot_name = match.group(2)
+                                    st.session_state.coach_name = match.group(3)
+                                    print(st.session_state.folder_date, "##",st.session_state.depot_name,"##", st.session_state.coach_name)
+                                else:
+                                    st.warning("Folder name does not match the expected pattern")
+
                                 # Use cached processing
                                 st.session_state.data_handler = process_folder(folder_path)
                                 
@@ -125,6 +144,8 @@ class StreamlitGUI:
         with tabs[2]:
             render_summary()
             pass
+        with tabs[3]:  # Add settings tab
+            render_settings()
 
 def main():
     gui = StreamlitGUI()
