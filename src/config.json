@@ -38,7 +38,8 @@
     },
     "SUMMARY_TAB": {
         "Speed Sensor Error/Axel_Lock Indication": {
-            "Description": [
+            "COLUMNS": [
+                "Description",
                 "Axle 1",
                 "Axle 2",
                 "Axle 3",
@@ -64,6 +65,13 @@
             ]
         },
         "Dump Valve Errors": {
+            "COLUMNS": [
+                "Description",
+                "Axle 1",
+                "Axle 2",
+                "Axle 3",
+                "Axle 4"
+            ],
             "Short Circuit Error List": [
                 "E_DV1_SC",
                 "E_DV2_SC",
@@ -84,11 +92,19 @@
             ]
         },
         "Power On Event": {
+            "COLUMNS": [
+                "Description",
+                "Event Count"
+            ],
             "Power On List": [
                 "I_POWER_ON"
             ]
         },
         "System Error": {
+            "COLUMNS": [
+                "Description",
+                "Event Count"
+            ],
             "Short circuit detected on DO WSP_FAILURE": [
                 "E_WSP_FAILURE"
             ],
@@ -115,23 +131,15 @@
             ]
         }
     },
-    "FILL_VENT_PAIRS": [
-        {
-            "FILL_1": "FILL_1",
-            "VENT_1": "VENT_1"
-        },
-        {
-            "FILL_2": "FILL_2",
-            "VENT_2": "VENT_2"
-        },
-        {
-            "FILL_3": "FILL_3",
-            "VENT_3": "VENT_3"
-        },
-        {
-            "FILL_4": "FILL_4",
-            "VENT_4": "VENT_4"
-        }
-    ],
+    "FILL_VENT_PAIRS": {
+        "FILL_1": "FILL_1",
+        "VENT_1": "VENT_1",
+        "FILL_2": "FILL_2",
+        "VENT_2": "VENT_2",
+        "FILL_3": "FILL_3",
+        "VENT_3": "VENT_3",
+        "FILL_4": "FILL_4",
+        "VENT_4": "VENT_4"
+    },
     "ERROR_DESCRIPTION": "Description"
 }
