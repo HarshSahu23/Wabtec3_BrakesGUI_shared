@@ -12,7 +12,7 @@ from frontend.utils.sidebar_utils import show_credits, show_help
 @lru_cache(maxsize=32)
 def process_folder(folder_path: str):
     """Cache folder processing to avoid recomputing"""
-    return DataHandler(folder_path)
+    return DataHandler(folder_path,"src\\config.json")
 
 def get_csv_files(folder_path: str) -> list:
     """Efficiently get CSV files using pathlib"""
