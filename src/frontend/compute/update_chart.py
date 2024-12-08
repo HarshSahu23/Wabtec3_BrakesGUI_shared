@@ -106,11 +106,11 @@ def update_chart(data_handler, selected_errors, chart_type):
                     'toImageButtonOptions': {
                         'format': 'png',
                         'filename': 'error_analysis',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
+                        'height': 720,
+                        'width': 1280,
+                        'scale': 1
                     }
-                }
+                },
             )
             
             # Remove or comment out the existing 'Detailed Data' section

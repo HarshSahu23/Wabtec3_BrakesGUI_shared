@@ -1,33 +1,23 @@
-# src/frontend/streamlit_gui.py
-
-import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
+# Import backend
 from backend.data_handler import DataHandler
-import tempfile
-import os
-from pathlib import Path
-from functools import lru_cache
-from frontend.compute.visualizations import create_bar_chart, create_pie_chart, create_treemap, get_color
-from frontend.utils.css_utils import inject_main_css, inject_column_css, get_metrics_css, inject_tab_css  # Import CSS utilities
-from frontend.utils.sidebar_utils import show_help, show_credits  # Import sidebar utilities
+# Import frontend tools
+from frontend.compute.visualizations import get_color
+from frontend.utils.render_sidebar import render_sidebar
+from frontend.utils.css_utils import inject_main_css, inject_tab_css  
+# Import GUI Tabs
 from frontend.tabs.render_brakes_log import render_brakes_log;
 from frontend.tabs.render_dump_log import render_dump_log;
 from frontend.tabs.render_summary import render_summary;
-from frontend.tabs.render_settings import render_settings  # Add this import
-import glob
+from frontend.tabs.render_settings import render_settings
+# Import core libs
+import streamlit as st
+import os
+from pathlib import Path
+from functools import lru_cache
 import tkinter as tk
 from tkinter import filedialog
-import re  # Import regex module
-
-@lru_cache(maxsize=32)
-def process_folder(folder_path: str):
-    """Cache folder processing to avoid recomputing"""
-    return DataHandler(folder_path)
-
-def get_csv_files(folder_path: str) -> list:
-    """Efficiently get CSV files using pathlib"""
-    return [f for f in Path(folder_path).glob('*.csv')]
+import re  
+#==============================================
 
 class StreamlitGUI:
     def __init__(self):
@@ -85,55 +75,7 @@ class StreamlitGUI:
         
         # Sidebar content
         with st.sidebar:
-            st.header("Settings")
-
-            # Function to open folder selection dialog
-            def select_folder():
-                root = tk.Tk()
-                root.withdraw()  # Hide the main window
-                root.attributes('-topmost', True)  # Bring the dialog to the front
-                folder_selected = filedialog.askdirectory()
-                root.destroy()
-                return folder_selected
-
-            # Replace file uploader with 'Upload Folder' button
-            if st.button("Upload Folder"):
-                folder_path = select_folder()
-                if folder_path:
-                    with st.spinner('Processing files...'):
-                        csv_files = get_csv_files(folder_path)
-                        if csv_files:
-                            try:
-                                # Parse folder name
-                                folder_name = os.path.basename(folder_path)
-                                match = re.match(r'(\d{2}-\d{2}-\d{4})_(.+)_(.+)', folder_name)
-                                if match:
-                                    st.session_state.folder_date = match.group(1)
-                                    st.session_state.depot_name = match.group(2)
-                                    st.session_state.coach_name = match.group(3)
-                                    print(st.session_state.folder_date, "##",st.session_state.depot_name,"##", st.session_state.coach_name)
-                                else:
-                                    st.warning("Folder name does not match the expected pattern")
-
-                                # Use cached processing
-                                st.session_state.data_handler = process_folder(folder_path)
-                                
-                                if len(st.session_state.data_handler.ecl_freq_summary) == 0:
-                                    st.error("No data found in the CSV files!")
-                                else:
-                                    st.success("Files processed successfully")
-                                    with st.expander("Processed Files"):
-                                        for file in csv_files:
-                                            st.write(file.name)
-                            except Exception as e:
-                                st.error(f"Error: {str(e)}")
-                        else:
-                            st.error("No CSV files found in folder")
-                else:
-                    st.info("👆 Please select a folder")
-
-            show_help()
-            show_credits()
+            render_sidebar()
         
         # Render content based on active tab
         with tabs[0]:
