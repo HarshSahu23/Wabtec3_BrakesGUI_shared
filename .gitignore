@@ -30,3 +30,5 @@ ENV/
 *.log
 .coverage
 htmlcov/
+# @Harsh created a local csv folder to read it's content
+05-12-2024_ICF_12345
