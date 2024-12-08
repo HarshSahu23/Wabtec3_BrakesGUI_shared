@@ -8,9 +8,12 @@ from backend.data_extractor.dataframe_classifier import DataFrameClassifier, Dat
 from backend.data_processors.ecl_processor import ECLProcessor
 from backend.data_processors.dmp_processor import DMPProcessor
 from backend.data_extractor.dataframe_extractor import DataFrameExtractor
+from backend.json_config_loader import JSONConfigReader
+from backend.data_processors.error_grouper_for_error_log_tab import get_error_groups
+from backend.data_processors.table_maker_for_summary_tab import get_tables
 
 class DataHandler:
-    def __init__(self, folder_path):
+    def __init__(self, folder_path, json_config_path):
         """
         Initialize DataHandler with robust folder path validation.
         
@@ -32,7 +35,9 @@ class DataHandler:
             self.ecl_freq_summary = pd.DataFrame()
             self.filtered_dmp = pd.DataFrame()
             self.dmp_freq_summary = pd.Series()
-            
+            self.jcr = JSONConfigReader(json_config_path)
+            self.error_grps = dict()
+            self.tables = dict()
             # Set csv folder
             self.set_folder(folder_path)
             
@@ -109,9 +114,11 @@ class DataHandler:
                 logging.warning("No DMP data processed")
 
 
-            self.ecl_freq_summary = ECLProcessor.get_frequency_summary(self.ecl)
-            self.filtered_dmp = DMPProcessor.filter_dmp(self.dmp)
+            self.ecl_freq_summary = ECLProcessor.get_frequency_summary(self.ecl, self.jcr)
+            self.filtered_dmp = DMPProcessor.filter_dmp(self.dmp, self.jcr)
             self.dmp_freq_summary = DMPProcessor.get_frequency_summary(self.filtered_dmp)
+            self.error_grps = get_error_groups(self.jcr, self.ecl_freq_summary)
+            self.tables = get_tables(self.ecl_freq_summary, self.jcr)
             # print(self.filtered_dmp)
             
         except Exception as e:
@@ -122,8 +129,12 @@ class DataHandler:
         """Reset instance variables to empty state."""
         self.ecl = pd.DataFrame()
         self.dmp = pd.DataFrame()
+        self.ecl_freq_summary = pd.DataFrame()
         self.filtered_dmp = pd.DataFrame()
         self.dmp_freq_summary = pd.Series()
+        # self.jcr = JSONConfigReader(json_config_path)
+        self.error_grps = dict()
+        self.tables = dict()
 
     def get_folder(self):
         """Get current folder path."""

@@ -3,7 +3,7 @@ import logging
 
 class ECLProcessor:
     @staticmethod
-    def get_frequency_summary(df_ecl_fmtd):
+    def get_frequency_summary(df_ecl_fmtd, jcr):
         """
         Get ECL frequency summary with error handling.
         
@@ -18,9 +18,9 @@ class ECLProcessor:
                 logging.warning("Empty or None dataframe passed to get_ecl_freq_summary")
                 return pd.DataFrame()
 
-            summary = df_ecl_fmtd.groupby(by=["Description"])
+            summary = df_ecl_fmtd.groupby(by=[jcr.get_error_description()])
             summary = summary.size().reset_index(name='Frequency')
-            summary['SortKey'] = summary['Description'].apply(lambda x: (-len(str(x)), str(x).lower()))
+            summary['SortKey'] = summary[jcr.get_error_description()].apply(lambda x: (-len(str(x)), str(x).lower()))
             summary = summary.sort_values(by="SortKey", ignore_index=True)
             summary = summary.drop(columns='SortKey')
             
