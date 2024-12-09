@@ -1,3 +1,4 @@
+import random
 import plotly.graph_objects as go
 import plotly.express as px
 from functools import lru_cache
@@ -237,5 +238,46 @@ def create_treemap(filtered_data):
     )
 
     annotate_folder_stats(fig)
+    
+    return fig
+
+random_offset = random.randint(1, 100)
+
+def create_clubbed_horizontal_bar_chart(df,random_offset):
+    """Create a clubbed horizontal bar chart from the dataframe."""
+    value_columns = df.columns[1:]  # Adjust based on actual non-numeric columns
+    colors = [get_color(random_offset + i) for i in range(len(value_columns))]
+
+    fig = go.Figure()
+    for idx, col in enumerate(value_columns):
+        values = df[col]  # Placeholder for zero values
+        values = values.replace(0,0.1)
+        fig.add_trace(go.Bar(
+            y=df['Description'],
+            x=values,
+            name=col,
+            orientation='h',
+            marker_color=colors[idx],
+            hovertemplate='<b>%{y}</b><br><b>' + col + ':</b> %{text}<extra></extra>',
+            width=0.2,  # Reduce bar thickness
+            text = df[col]
+        ))
+
+    fig.update_layout(
+        barmode='group',  # Changed to 'group' for clubbed bars
+        bargap=0,
+        
+        xaxis_title='Values',
+        yaxis_title='Error Group',
+        plot_bgcolor='white',
+        showlegend=True,
+        margin=dict(t=50, l=50, r=50, b=50),
+        height=600,
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=12,
+            font_family="Arial"
+        )
+    )
     
     return fig
