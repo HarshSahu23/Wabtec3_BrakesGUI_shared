@@ -71,7 +71,7 @@ class StreamlitGUI:
     def render(self):
         # Create tabs for navigation
         # Update tabs to include Settings
-        tabs = st.tabs(["Brakes Log", "Dump Log", "Summary", "Settings"])
+        tabs = st.tabs(["Summary", "Error Log", "WSP Activity Log",  "Settings"])
         
         # Sidebar content
         with st.sidebar:
@@ -79,12 +79,12 @@ class StreamlitGUI:
         
         # Render content based on active tab
         with tabs[0]:
-            render_brakes_log()
+            render_summary()
         with tabs[1]:
-            render_dump_log()
+            render_brakes_log()
             pass
         with tabs[2]:
-            render_summary()
+            render_dump_log()
             pass
         with tabs[3]:  # Add settings tab
             render_settings()
