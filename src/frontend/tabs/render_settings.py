@@ -2,6 +2,81 @@ import streamlit as st
 import json
 from pathlib import Path
 from datetime import datetime
+import hashlib
+import time
+
+# Add these constants at the top
+CORRECT_PIN_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"  # This is hash of '123456'
+MAX_ATTEMPTS = 3
+LOCKOUT_TIME = 300  # 5 minutes in seconds
+
+def verify_pin(pin):
+    """Verify PIN with protection against timing attacks"""
+    if not pin.isdigit() or len(pin) != 6:
+        return False
+    hashed_input = hashlib.sha256(pin.encode()).hexdigest()
+    # return st.secrets.compare_digest(hashed_input, CORRECT_PIN_HASH)
+    return hashed_input == CORRECT_PIN_HASH
+
+def render_pin_interface():
+    """Render the PIN entry interface with animations"""
+    st.markdown("""
+        <style>
+        .locked-container {
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .pin-input {
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        st.markdown('<div class="locked-container">', unsafe_allow_html=True)
+        # st.image("🔒", width=64)  # You can replace this with a actual lock image
+        st.markdown("### Settings are locked")
+        st.markdown("Enter 6-digit PIN to access settings")
+        
+        # PIN input with custom styling
+        pin = st.text_input("PIN", type="password", max_chars=6, key="pin_input", 
+                           help="Enter a 6-digit PIN", label_visibility="collapsed")
+        
+        if st.button("Unlock"):
+            attempts = st.session_state.get('pin_attempts', 0)
+            last_attempt = st.session_state.get('last_attempt_time', 0)
+            
+            # Check if user is in lockout period
+            if time.time() - last_attempt < LOCKOUT_TIME and attempts >= MAX_ATTEMPTS:
+                remaining = int(LOCKOUT_TIME - (time.time() - last_attempt))
+                st.error(f"Too many attempts. Please wait {remaining} seconds.")
+                return False
+            
+            if verify_pin(pin):
+                st.session_state.settings_unlocked = True
+                st.session_state.pin_attempts = 0
+                st.success("Settings unlocked!")
+                time.sleep(0.5)  # Small delay for animation
+                st.rerun()
+            else:
+                attempts += 1
+                st.session_state.pin_attempts = attempts
+                st.session_state.last_attempt_time = time.time()
+                remaining = MAX_ATTEMPTS - attempts
+                
+                if remaining > 0:
+                    st.error(f"Incorrect PIN. {remaining} attempts remaining.")
+                else:
+                    st.error(f"Account locked. Please wait {LOCKOUT_TIME} seconds.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 def render_folder_name_settings():
     """Render the folder name configuration section"""
@@ -276,7 +351,22 @@ def render_config_settings():
 
 def render_settings():
     """Main settings panel render function"""
-    # Create two columns - one for title, one for toggle
+    # Initialize session state for settings lock
+    if 'settings_unlocked' not in st.session_state:
+        st.session_state.settings_unlocked = False
+    
+    # Show lock button if settings are unlocked
+    if st.session_state.settings_unlocked:
+        if st.button("🔒 Lock Settings", type="secondary"):
+            st.session_state.settings_unlocked = False
+            st.rerun()
+    
+    # Show either PIN interface or settings content
+    if not st.session_state.settings_unlocked:
+        render_pin_interface()
+        return
+    
+    # Original settings content
     col1, col2 = st.columns([4, 1])
     with col1:
         st.title("Settings")
