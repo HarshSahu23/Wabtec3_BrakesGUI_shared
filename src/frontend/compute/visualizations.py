@@ -1,7 +1,10 @@
-
+import random
 import plotly.graph_objects as go
 import plotly.express as px
 from functools import lru_cache
+from datetime import datetime
+import streamlit as st
+from PIL import Image
 
 # Extended color palette
 base_colors = (
@@ -11,7 +14,45 @@ base_colors = (
     px.colors.qualitative.Pastel2 +
     px.colors.qualitative.Set2
 )
+logo_path = "D:\\Harsh Data\\Coding\\Hackathon\\Wabtec3_BrakesGUI_shared\\wabtec-logo-red.png"
+wabtec_logo = Image.open(logo_path)
 
+def annotate_folder_stats(fig):
+    # Add logo in the top right corner
+
+    annotations = [
+        {"label": "Depot Name:", "value": st.session_state.depot_name},
+        {"label": "Coach Num:", "value": st.session_state.coach_name},
+        {"label": "Analysis Time:", "value":  datetime.now().strftime('%d-%m-%Y %I:%M:%S %p')}
+    ]
+        
+    num_annotations = len(annotations)
+    spacing = 1 / num_annotations
+    
+    for i, anno in enumerate(annotations, start=1):
+        x_pos = spacing * i
+        fig.add_annotation(
+            x=x_pos - spacing / 2,
+            y=1.03,
+            xref='paper',
+            yref='paper',
+            text=anno["label"],
+            showarrow=False,
+            xanchor='right',
+            yanchor='bottom',
+            font=dict(size=14, color='grey'),
+        )
+        fig.add_annotation(
+            x=x_pos - spacing / 2 + spacing / 100,
+            y=1.03,
+            xref='paper',
+            yref='paper',
+            text=anno["value"],
+            showarrow=False,
+            xanchor='left',
+            yanchor='bottom',
+            font=dict(size=14, color='indigo'),
+        )
 def get_color(i):
     """Generate a repeating color from the base palette."""
     return base_colors[i % len(base_colors)]
@@ -89,7 +130,7 @@ def create_bar_chart(filtered_data, get_color_func, session_state):
         yaxis_title='Error Description' if session_state.axes_swapped else 'Frequency',
         showlegend=False,
         xaxis_tickangle=-45 if not session_state.axes_swapped else 0,
-        margin=dict(t=100, l=50 if not session_state.axes_swapped else 200, r=50, b=100),
+        margin=dict(t=110, l=50 if not session_state.axes_swapped else 200, r=50, b=100),
         height=600,
         hoverlabel=dict(
             bgcolor="white",
@@ -101,6 +142,21 @@ def create_bar_chart(filtered_data, get_color_func, session_state):
         paper_bgcolor='white'
     )
     
+    annotate_folder_stats(fig)
+    fig.add_layout_image(
+        dict(
+            source=wabtec_logo,
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=1.2,
+            sizex=0.12,
+            sizey=0.1,
+            xanchor="left",
+            yanchor="top",
+            layer="above"
+        )
+    )    
     # Add grid lines for better readability
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
@@ -109,6 +165,7 @@ def create_bar_chart(filtered_data, get_color_func, session_state):
 
 def create_pie_chart(filtered_data, get_color_func):
     """Create an interactive pie chart using Plotly"""
+    
     # Generate colors for each slice
     colors = [get_color_func(i) for i in range(len(filtered_data))]
     
@@ -142,18 +199,20 @@ def create_pie_chart(filtered_data, get_color_func):
             xanchor="left",
             x=1.0
         ),
-        margin=dict(t=100, l=50, r=50, b=50),
+        margin=dict(t=110, l=50, r=50, b=50),
         hoverlabel=dict(
             bgcolor="white",
             font_size=12,
             font_family="Arial"
         )
     )
+    annotate_folder_stats(fig)
     
     return fig
 
 def create_treemap(filtered_data):
     """Create an interactive treemap using Plotly"""
+    
     # For treemap, we'll use a continuous color scale instead of discrete colors
     fig = px.treemap(
         filtered_data,
@@ -161,12 +220,64 @@ def create_treemap(filtered_data):
         values='Frequency',
         color='Frequency',
         color_continuous_scale=px.colors.sequential.Viridis,  # Changed to Viridis for better distinction
-        title='Error Distribution Treemap'
+        title='Error Distribution Treemap',
+    )
+    fig.update_layout(
+        title={
+            'text': 'Error Distribution Treemap',
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
     )
     
     fig.update_layout(
         height=600,
-        margin=dict(t=50, l=25, r=25, b=25)
+        margin=dict(t=110, l=25, r=25, b=25),
+    )
+
+    annotate_folder_stats(fig)
+    
+    return fig
+
+random_offset = random.randint(1, 100)
+
+def create_clubbed_horizontal_bar_chart(df,random_offset):
+    """Create a clubbed horizontal bar chart from the dataframe."""
+    value_columns = df.columns[1:]  # Adjust based on actual non-numeric columns
+    colors = [get_color(random_offset + i) for i in range(len(value_columns))]
+
+    fig = go.Figure()
+    for idx, col in enumerate(value_columns):
+        values = df[col]  # Placeholder for zero values
+        values = values.replace(0,0.1)
+        fig.add_trace(go.Bar(
+            y=df['Description'],
+            x=values,
+            name=col,
+            orientation='h',
+            marker_color=colors[idx],
+            hovertemplate='<b>%{y}</b><br><b>' + col + ':</b> %{text}<extra></extra>',
+            width=0.2,  # Reduce bar thickness
+            text = df[col]
+        ))
+
+    fig.update_layout(
+        barmode='group',  # Changed to 'group' for clubbed bars
+        bargap=0,
+        
+        xaxis_title='Values',
+        yaxis_title='Error Group',
+        plot_bgcolor='white',
+        showlegend=True,
+        margin=dict(t=50, l=50, r=50, b=50),
+        height=600,
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=12,
+            font_family="Arial"
+        )
     )
     
     return fig

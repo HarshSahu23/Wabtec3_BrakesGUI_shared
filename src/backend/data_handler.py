@@ -11,6 +11,7 @@ from backend.data_extractor.dataframe_extractor import DataFrameExtractor
 from backend.json_config_loader import JSONConfigReader
 from backend.data_processors.error_grouper_for_error_log_tab import get_error_groups
 from backend.data_processors.table_maker_for_summary_tab import get_tables
+from backend.data_processors.detailed_data_for_error_grouper import get_detailed_data_for_error_groups
 
 class DataHandler:
     def __init__(self, folder_path, json_config_path):
@@ -118,6 +119,7 @@ class DataHandler:
             self.filtered_dmp = DMPProcessor.filter_dmp(self.dmp, self.jcr)
             self.dmp_freq_summary = DMPProcessor.get_frequency_summary(self.filtered_dmp)
             self.error_grps = get_error_groups(self.jcr, self.ecl_freq_summary)
+            self.error_group_details = get_detailed_data_for_error_groups(self.ecl, self.error_grps)
             self.tables = get_tables(self.ecl_freq_summary, self.jcr)
             # print(self.filtered_dmp)
             
@@ -168,6 +170,9 @@ class DataHandler:
         status += "\nDMP: " + {0: "SUCCESS", 1: "FAIL"}[self.dmp.empty] 
         print(f"OVERALL STATUS")
         print(status)
+
+    def get_detailed_data_for_group(self, group_name):
+        return self.error_group_details.get(group_name, pd.DataFrame())
 
 
 # main.py
