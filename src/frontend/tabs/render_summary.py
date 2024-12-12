@@ -1,10 +1,11 @@
 import streamlit as st
 import plotly.graph_objects as go
 import random
+from datetime import datetime  # Added import
 
 from backend.data_handler import DataHandler
 from frontend.utils.render_section_header import render_section_header
-from frontend.compute.visualizations import create_clubbed_horizontal_bar_chart
+from frontend.compute.summary_viz import create_clubbed_horizontal_bar_chart
 
 def render_summary():
     render_section_header(
@@ -12,6 +13,39 @@ def render_summary():
         "Overview of system health and key metrics across all logs.",
         "📈"
     )
+    # Settings to edit and save folder metadata moved from settings panel to here
+    # Add inputs for Date, Depot Name, and Coach Name
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        # Date input
+        date_value = None
+        if 'folder_date' not in st.session_state:
+            st.session_state.folder_date = datetime.now().strftime("%d-%m-%Y")
+        else:
+            try:
+                date_value = datetime.strptime(st.session_state.folder_date, "%d-%m-%Y")
+            except:
+                pass
+        new_date = st.date_input(
+            "Date",
+            value=date_value or datetime.now(),
+            format="DD-MM-YYYY",
+        )
+        st.session_state.folder_date = new_date.strftime("%d-%m-%Y")
+    with col2:
+        # Depot Name input
+        new_depot = st.text_input(
+            "Depot Name",
+            value=st.session_state.get('depot_name', ""),
+        )
+        st.session_state.depot_name = new_depot
+    with col3:
+        # Coach Name input
+        new_coach = st.text_input(
+            "Coach Name",
+            value=st.session_state.get('coach_name', ""),
+        )
+        st.session_state.coach_name = new_coach
 
     # Initialize visibility states
     if 'show_tables' not in st.session_state:
@@ -32,7 +66,7 @@ def render_summary():
             st.session_state.color_seed = random.randint(1, 100)
         if 'color_seed' not in st.session_state:
             st.session_state.color_seed = random.randint(1, 100)
-        random_color = st.button("Change Color Palette", help="Randomize chart colors", on_click=update_color_seed)
+        st.button("Change Color Palette", help="Randomize chart colors", on_click=update_color_seed)
 
     try:
         if not st.session_state.data_handler.tables:

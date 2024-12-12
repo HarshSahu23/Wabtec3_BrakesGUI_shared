@@ -374,9 +374,10 @@ def render_settings():
         show_multiselect = st.toggle("Show Multiselect", value=True)
         st.session_state.show_multiselect = show_multiselect
     
+    # Relocated this settings to the summary tab
     # Section for folder name configuration
-    with st.expander("Folder Name Configuration", expanded=True):
-        render_folder_name_settings()
+    # with st.expander("Folder Name Configuration", expanded=True):
+    #     render_folder_name_settings()
     
     # Section for JSON configuration
     render_config_settings()
