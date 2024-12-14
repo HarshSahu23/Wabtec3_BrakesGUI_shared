@@ -14,7 +14,7 @@ base_colors = (
     px.colors.qualitative.Pastel2 +
     px.colors.qualitative.Set2
 )
-logo_path = "D:\\Harsh Data\\Coding\\Hackathon\\Wabtec3_BrakesGUI_shared\\wabtec-logo-red.png"
+logo_path = "wabtec-logo-red.png"
 wabtec_logo = Image.open(logo_path)
 
 def annotate_folder_stats(fig):
