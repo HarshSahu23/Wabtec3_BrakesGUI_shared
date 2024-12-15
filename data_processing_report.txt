@@ -1,0 +1,71 @@
+====================DATA PROCESSING REPORT====================
+
+DATA SUMMARY:
+ECL Dataset: 259 rows
+DMP Dataset: 2400 rows
+Filtered DMP Dataset: 2400 rows
+
+ECL FREQUENCY SUMMARY:
+         Description  Frequency
+0   AXLE1_LOCK  GONE         11
+1   AXLE2_LOCK  GONE         10
+2   AXLE3_LOCK  GONE         11
+3   AXLE4_LOCK  GONE         11
+4   E_SS_SC_OC2 GONE         11
+5    E_DV1_TOUT GONE          4
+6    E_DV2_TOUT GONE          2
+7    E_DV3_TOUT GONE          2
+8    E_DV4_TOUT GONE          4
+9    E_SENS_FR1 GONE          2
+10   E_SENS_FR2 GONE          2
+11     E_WSP_FAILURE          3
+12      E_ZERO_SPEED          5
+13       E_DEVICE_ON          6
+14       E_SPEED_5_1          4
+15       E_SPEED_5_2          5
+16       E_SS_SC_OC2         11
+17        AXLE1_LOCK         21
+18        AXLE2_LOCK         18
+19        AXLE3_LOCK         21
+20        AXLE4_LOCK         21
+21        E_DV1_TOUT          3
+22        E_DV2_TOUT          1
+23        E_DV3_TOUT          2
+24        E_DV4_TOUT          4
+25        E_SENS_FR1          4
+26        E_SENS_FR2          8
+27        E_SENS_FR3          2
+28        E_SENS_FR4          2
+29        E_SPEED_30          4
+30        E_SPEED_45         10
+31        I_POWER_ON         29
+32         E_SPEED_5          3
+33          E_DV1_SC          1
+34          E_DV2_OC          1
+
+DMP FREQUENCY SUMMARY:
+FILL_2    42
+VENT_2    22
+dtype: int64
+
+PROCESSING STATUS:
+OVERALL STATUS
+
+ECL: SUCCESS
+DMP: SUCCESS
+
+FILL VENT EVENTS:
+
+Event: FILL_1_VENT_1
+[]
+
+Event: FILL_2_VENT_2
+[
+    {'start_time': 39.9, 'end_time': 40.6, 'vent_transition_count': 2}, {'start_time': 40.8, 'end_time': 40.9, 'vent_transition_count': 0}, {'start_time': 41.1, 'end_time': 41.1, 'vent_transition_count': 0}, {'start_time': 51.9, 'end_time': 52.2, 'vent_transition_count': 1}, {'start_time': 52.4, 'end_time': 52.6, 'vent_transition_count': 1}, {'start_time': 52.8, 'end_time': 52.9, 'vent_transition_count': 0}, {'start_time': 53.1, 'end_time': 53.1, 'vent_transition_count': 0}, {'start_time': 39.9, 'end_time': 40.3, 'vent_transition_count': 1}, {'start_time': 40.5, 'end_time': 40.6, 'vent_transition_count': 0}, {'start_time': 40.8, 'end_time': 41.0, 'vent_transition_count': 1}, {'start_time': 41.2, 'end_time': 41.2, 'vent_transition_count': 0}, {'start_time': 41.4, 'end_time': 41.4, 'vent_transition_count': 0}, {'start_time': 41.7, 'end_time': 41.7, 'vent_transition_count': 0}, {'start_time': 39.9, 'end_time': 40.6, 'vent_transition_count': 1}
+]
+
+Event: FILL_3_VENT_3
+[]
+
+Event: FILL_4_VENT_4
+[]
