@@ -57,3 +57,5 @@ class DMPProcessor:
         except Exception as e:
             logging.error(f"Error generating DMP frequency summary: {e}")
             return pd.Series()
+
+    
