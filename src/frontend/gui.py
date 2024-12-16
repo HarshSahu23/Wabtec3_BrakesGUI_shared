@@ -67,6 +67,12 @@ class StreamlitGUI:
             st.session_state.depot_name = None
         if 'coach_name' not in st.session_state:
             st.session_state.coach_name = None
+        if 'settings_unlocked' not in st.session_state:
+            st.session_state.settings_unlocked = False
+        if 'pin_attempts' not in st.session_state:
+            st.session_state.pin_attempts = 0
+        if 'last_attempt_time' not in st.session_state:
+            st.session_state.last_attempt_time = 0
     
     def render(self):
         # Create tabs for navigation

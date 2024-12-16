@@ -14,11 +14,26 @@ base_colors = (
     px.colors.qualitative.Pastel2 +
     px.colors.qualitative.Set2
 )
-logo_path = "D:\\Harsh Data\\Coding\\Hackathon\\Wabtec3_BrakesGUI_shared\\wabtec-logo-red.png"
+logo_path = "wabtec-logo-red.png"
 wabtec_logo = Image.open(logo_path)
 
 def annotate_folder_stats(fig):
+    # Moved from the function that draws charts to this one
     # Add logo in the top right corner
+    fig.add_layout_image(
+        dict(
+            source=wabtec_logo,
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=1.2,
+            sizex=0.12,
+            sizey=0.1,
+            xanchor="left",
+            yanchor="top",
+            layer="above"
+        )
+    )    
 
     annotations = [
         {"label": "Depot Name:", "value": st.session_state.depot_name},
@@ -53,6 +68,7 @@ def annotate_folder_stats(fig):
             yanchor='bottom',
             font=dict(size=14, color='indigo'),
         )
+
 def get_color(i):
     """Generate a repeating color from the base palette."""
     return base_colors[i % len(base_colors)]
@@ -143,20 +159,7 @@ def create_bar_chart(filtered_data, get_color_func, session_state):
     )
     
     annotate_folder_stats(fig)
-    fig.add_layout_image(
-        dict(
-            source=wabtec_logo,
-            xref="paper",
-            yref="paper",
-            x=0,
-            y=1.2,
-            sizex=0.12,
-            sizey=0.1,
-            xanchor="left",
-            yanchor="top",
-            layer="above"
-        )
-    )    
+
     # Add grid lines for better readability
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
@@ -243,41 +246,5 @@ def create_treemap(filtered_data):
 
 random_offset = random.randint(1, 100)
 
-def create_clubbed_horizontal_bar_chart(df,random_offset):
-    """Create a clubbed horizontal bar chart from the dataframe."""
-    value_columns = df.columns[1:]  # Adjust based on actual non-numeric columns
-    colors = [get_color(random_offset + i) for i in range(len(value_columns))]
 
-    fig = go.Figure()
-    for idx, col in enumerate(value_columns):
-        values = df[col]  # Placeholder for zero values
-        values = values.replace(0,0.1)
-        fig.add_trace(go.Bar(
-            y=df['Description'],
-            x=values,
-            name=col,
-            orientation='h',
-            marker_color=colors[idx],
-            hovertemplate='<b>%{y}</b><br><b>' + col + ':</b> %{text}<extra></extra>',
-            width=0.2,  # Reduce bar thickness
-            text = df[col]
-        ))
-
-    fig.update_layout(
-        barmode='group',  # Changed to 'group' for clubbed bars
-        bargap=0,
-        
-        xaxis_title='Values',
-        yaxis_title='Error Group',
-        plot_bgcolor='white',
-        showlegend=True,
-        margin=dict(t=50, l=50, r=50, b=50),
-        height=600,
-        hoverlabel=dict(
-            bgcolor="white",
-            font_size=12,
-            font_family="Arial"
-        )
-    )
-    
-    return fig
+# function moved to summary_viz.py
