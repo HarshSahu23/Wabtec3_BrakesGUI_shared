@@ -1,0 +1,48 @@
+.
+├── assets                                          # App/Repo related assets here.
+├── build_scripts                                   # Folder for Build related scripts.    
+│   ├── build_exe.py                                    -> Script to generate exec.            
+│   ├── exclude_modules.py                              -> List of modules to be excluded.                
+│   └── main.spec                                       -> Specifications that can be used with pyinstaller.        
+├── csv                                             # CSV files for testing purposes. 
+├── instructions.md                                 # Contains general instructions about project (to be merged with README).        
+├── readme.md                                       # Project instructions.
+├── requirements.txt                                # Required Python packages list.            
+└── src                                             # Containes the source code.   
+    ├── backend                                         -> Code for backend and data processing.    
+    │   ├── data_extractor                                  ->> Code for Data extraction.        
+    │   │   ├── dataframe_classifier.py                         - Identifies the type of log being processed.                                
+    │   │   └── dataframe_extractor.py                          - Extracts the CSV data as a dataframe.
+    │   ├── data_handler.py                                 ->> Code common interface that exposes all the backend functionality to frontend. 
+    │   ├── data_processors                                 ->> Code for analytical processing and data formatting.
+    │   │   ├── detailed_data_for_error_grouper.py              - Generate custom dataframe table to obtain detailed data.
+    │   │   ├── dmp_processor.py                                - Dump file procesing and formatting.
+    │   │   ├── ecl_processor.py                                - Error log processor.
+    │   │   ├── error_grouper_for_error_log_tab.py              - Error group generator for error log tab in UI.
+    │   │   └── table_maker_for_summary_tab.py                  - Table maker for summary tab in UI.
+    │   ├── json_config_loader.py                           ->> Loads JSON config from the directory.
+    │   ├── plotter.py                                      ->> Plotting functions for the use in CLI.
+    │   └── utils                                           ->> Utility code.
+    │       ├── exceptions.py                                   - Custom exception class code.
+    │       ├── folder_validator.py                             - Folder path validator.
+    │       └── logging_config.py                               - Logging config file.
+    ├── backup_config.json                              -> Backup config JSON in case some corruption of original happens.
+    ├── config.json                                     -> Config file for the app.
+    ├── frontend                                        -> Frontend code Part.
+    │   ├── cmd_toolset.py                                  ->> Code for cmd toolset.
+    │   ├── compute                                         ->> Computes various charting elements.
+    │   │   ├── calculate_percentages.py                        - Annotaions on the chart.
+    │   │   ├── summary_viz.py                                  - Chart for the summary tab.
+    │   │   ├── update_chart.py                                 - Updates chart when specific button clicked in error log tab.
+    │   │   └── visualizations.py                               - Charts for the error log tab.
+    │   ├── gui.py                                          ->> Main GUI entrypoint.
+    │   ├── tabs                                            ->> Contains GUI code for different tabs.                                      
+    │   └── utils                                           ->> Utility functions for various widgets.    
+    │       ├── create_tab_labels.py                            - CSS designs for labeling.
+    │       ├── css_utils.py                                    - CSS designs for error log tab.
+    │       ├── edit_folder_metadata.py                         - Widget for editing Coach and depot data
+    │       ├── render_section_header.py                        - CSS for section header.
+    │       ├── render_sidebar.py                               - Display custom sidebar.
+    │       └── sidebar_utils.py                                - Widgets displayed inside sidebar. 
+    ├── main.py                                         -> Main entry code for the app.
+    └── tester.ipynb                                    -> Tester python notebook to test the new functions. 
