@@ -21,15 +21,10 @@ class DataFrameClassifier:
             FileClasses: Detected file class
         """
         try:
-            # Validate file existence and readability
+            # Validate readability
             if df.empty:
                 logging.warning(f"Empty dataframe passed. Unable to classify.")
                 return DataFrameClasses.UNKNOWN
-
-            # file_type_and_col_names = {
-            #     DataFrameClasses.ECL: ["ERROR CODE LISTING", "Code(hex)", "Ticks(hex)"],
-            #     DataFrameClasses.DMP: ["MOD_TICK", "MONTIME"]
-            # }
 
             first_row = df.iloc[0]  # Get the first row
             all_numeric = first_row.apply(lambda x: x.isnumeric() if isinstance(x, str) else isinstance(x, (int, float))).all()
@@ -37,7 +32,7 @@ class DataFrameClassifier:
                 return DataFrameClasses.DMP
             else:
                 return DataFrameClasses.ECL
-            
+            # Implement UNKNOWN condition
             # return DataFrameClasses.UNKNOWN
 
         except Exception as e:

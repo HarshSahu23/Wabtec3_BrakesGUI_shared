@@ -120,7 +120,7 @@ class DataHandler:
             self.filtered_dmp = DMPProcessor.filter_dmp(self.dmp, self.jcr)
             self.dmp_freq_summary = DMPProcessor.get_frequency_summary(self.filtered_dmp)
             self.error_grps = get_error_groups(self.jcr, self.ecl_freq_summary)
-            self.error_group_details = get_detailed_data_for_error_groups(self.ecl, self.error_grps)
+            self.error_group_details = get_detailed_data_for_error_groups(self.ecl, self.error_grps, self.jcr)
             self.tables = get_tables(self.ecl_freq_summary, self.jcr)
             self.fill_vent_events = DMPProcessor.process_fill_vent_events(self.dmp)
             self.print_report()

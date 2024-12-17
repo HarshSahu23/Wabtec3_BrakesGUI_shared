@@ -75,14 +75,14 @@ def import_folder(folder_path=None):
 
 def plot_bar(tags=None, dh: DataHandler = None):
     try:
-        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary['Description'].isin(
+        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary[dh.jcr.get_error_description()].isin(
             tags)]
         if filtered_df.empty:
             print(f"No matching tags found for: {tags}")
         else:
             print("Drawing bar chart with given error names...")
             Plotter.plot_bar_chart(
-                x=filtered_df['Description'],
+                x=filtered_df[dh.jcr.get_error_description()],
                 y=filtered_df['Frequency'],
                 xlabel="Description",
                 ylabel="Frequency"
@@ -93,14 +93,14 @@ def plot_bar(tags=None, dh: DataHandler = None):
 
 def plot_pie(tags=None, dh: DataHandler = None):
     try:
-        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary['Description'].isin(
+        filtered_df = dh.ecl_freq_summary[dh.ecl_freq_summary[dh.jcr.get_error_description()].isin(
             tags)]
         if filtered_df.empty:
             print(f"No matching tags found for: {tags}")
         else:
             print("Drawing pie chart with given error names...")
             Plotter.plot_pie_chart(
-                labels=filtered_df['Description'],
+                labels=filtered_df[dh.jcr.get_error_description()],
                 data=filtered_df['Frequency']
             )
     except IndexError:
@@ -110,7 +110,7 @@ def plot_pie(tags=None, dh: DataHandler = None):
 def plot_complete_bar(dh: DataHandler):
     print("Drawing complete bar chart...")
     Plotter.plot_bar_chart(
-        x=dh.ecl_freq_summary['Description'],
+        x=dh.ecl_freq_summary[dh.jcr.get_error_description()],
         y=dh.ecl_freq_summary['Frequency'],
         xlabel="Description",
         ylabel="Frequency"
@@ -120,7 +120,7 @@ def plot_complete_bar(dh: DataHandler):
 def plot_complete_pie(dh: DataHandler):
     print("Drawing complete pie chart...")
     Plotter.plot_pie_chart(
-        labels=dh.ecl_freq_summary['Description'],
+        labels=dh.ecl_freq_summary[dh.jcr.get_error_description()],
         data=dh.ecl_freq_summary['Frequency']
     )
 

@@ -125,25 +125,11 @@ class DataFrameExtractor:
             raise ValueError(
                 "Failed to locate a valid header or delimiter in the file.")
 
-        # df = df[header_line_idx:].reset_index(drop=True)
-
         main_section_end = DataFrameExtractor.__find_end_index(df, delimiter, header_line_idx)
-        # Extract the upper section lines
-        # df = df[0:upper_section_end]
-
-        # df_ecl_fmtd = df.iloc[:, 0].str.split(delimiter, expand=True)
-
-        # df_ecl_fmtd = df_ecl_fmtd.reset_index(drop=True)
-
-        # # Reassign columns
-        # df_ecl_fmtd.columns = df_ecl_fmtd.iloc[0]
-
-        # # Reset the index
-        # df_ecl_fmtd = df_ecl_fmtd.iloc[1:].reset_index(drop=True)
         df_ecl_fmtd = pd.read_csv(
                             file_path, 
-                            skiprows=range(0, header_line_idx),  # Skip rows before the start line
-                            nrows=main_section_end - header_line_idx,     # Read only the specified number of rows
+                            skiprows=range(0, header_line_idx),        # Skip rows before the start line
+                            nrows=main_section_end - header_line_idx,  # Read only the specified number of rows
                             delimiter=delimiter
                         )
 
@@ -155,8 +141,7 @@ class DataFrameExtractor:
 
         # Use str.strip() to remove both leading and trailing characters
         df.iloc[:, 0] = df.iloc[:, 0].str.strip(
-            chars_to_trim)
-        # display(df.head(10))
+            chars_to_trim)  
         return df
 
     @staticmethod
@@ -165,7 +150,3 @@ class DataFrameExtractor:
         df = DataFrameExtractor.__trim_df(df)
         df = DataFrameExtractor.__extract_main_section(df, file_path)
         return df
-    
-# if __name__ == "__main__":
-#     df = DataFrameExtractor.get_df_from_file("csv\Error 2.csv")
-#     print(df)
