@@ -69,7 +69,7 @@ def import_folder(folder_path=None):
             f"Invalid folder path: '{folder_path}'. Ensure it exists, is a directory, and is accessible.")
     print(f"Importing new folder...")
     print(f"Folder path: {folder_path}")
-    dh = DataHandler(folder_path)
+    dh = DataHandler(folder_path,"src/config.json")
     return dh
 
 
