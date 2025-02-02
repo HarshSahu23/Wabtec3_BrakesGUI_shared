@@ -9,9 +9,9 @@
 
 ## Features ✨
 
-- Interactive GUI built with PyQt5
+- Interactive GUI built with Streamlit
 - Real-time error code analysis
-- Dynamic visualization using matplotlib
+- Dynamic visualization using Plotly
 - CSV file processing and management
 - Comprehensive error frequency reporting
 
